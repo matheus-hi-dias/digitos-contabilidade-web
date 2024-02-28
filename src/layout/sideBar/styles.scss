@@ -10,28 +10,16 @@
   flex-direction: column;
   align-items: center;
   font-size: variables.$FONT-BASE;
-  ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    gap: 2vh;
-    li {
-      width: 100%;
-      text-align: center;
-    }
-  }
 }
 
 .linkTextStyle {
   width: 100%;
-  height: 100%;
+  padding: 1vh;
+  text-align: center;
   text-decoration: none;
   color: variables.$N100
 }
 
 .activeRoute {
-  width: 296px;
   background-color: variables.$TERTIARY_COLOR;
 }

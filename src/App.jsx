@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route element={<ScreensLayout/>}>
-        <Route path='documentType' element={<DocumentType/>}/>
+        <Route path='tipo-de-documento' element={<DocumentType/>}/>
       </Route>
     </Routes>
     </BrowserRouter>
