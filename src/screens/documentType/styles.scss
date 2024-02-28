@@ -1,0 +1,6 @@
+@use "../../styles/variables";
+
+.documentTypeLayout {
+  width: 100%;
+  background-color: variables.$PRIMARY_COLOR;
+}
