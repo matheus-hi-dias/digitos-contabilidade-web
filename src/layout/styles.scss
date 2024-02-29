@@ -1,7 +1,6 @@
 .dashboardLayoutContainer {
   display: grid;
-  grid-template-areas:
-    'sidebar mainScreen mainScreen';
+  grid-template-areas: "sidebar mainScreen mainScreen";
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
   height: 100vh;
@@ -10,7 +9,6 @@
 .dashboardLayoutSideBar {
   grid-area: sidebar;
 }
-
 
 .dashboardContent {
   grid-area: mainScreen;
