@@ -2,5 +2,23 @@
 
 .documentTypeLayout {
   width: 100%;
+  height: 100vh;
   background-color: variables.$PRIMARY_COLOR;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.documentSearchAddContainer {
+  height: 15%;
+  width: 80%;
+}
+
+.documentTypeListContainer {
+  width: 90%;
+  height: 80%;
+  background-color: variables.$N300;
+  border-radius: 4px;
+  box-shadow: -4px 4px 4px rgba(#000, 0.1);
 }

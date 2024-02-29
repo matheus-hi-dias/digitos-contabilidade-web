@@ -1,11 +1,15 @@
-import "./styles.scss"
+import ItemList from "../../components/ItemList";
+import "./styles.scss";
 
 const DocumentType = () => {
   return (
     <div className="documentTypeLayout">
-      Teste
-    </div>
-  )
-}
+      <div className="documentSearchAddContainer"></div>
+      <ItemList containerClassName={"documentTypeListContainer"}>
 
-export default DocumentType
+      </ItemList>
+    </div>
+  );
+};
+
+export default DocumentType;
