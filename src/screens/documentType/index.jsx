@@ -1,13 +1,13 @@
-import ItemList from "../../components/ItemList";
+import List from "../../components/List";
 import "./styles.scss";
 
 const DocumentType = () => {
   return (
     <div className="documentTypeLayout">
       <div className="documentSearchAddContainer"></div>
-      <ItemList containerClassName={"documentTypeListContainer"}>
+      <List containerClassName={"documentTypeListContainer"}>
 
-      </ItemList>
+      </List>
     </div>
   );
 };
