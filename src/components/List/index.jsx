@@ -1,6 +1,6 @@
-const ItemList = ({ containerClassName, children }) => {
+const List = ({ containerClassName, children }) => {
   return (
     <div className={`itemListComponentClass ${containerClassName}`}>{children}</div>
   );
 };
-export default ItemList;
+export default List;
