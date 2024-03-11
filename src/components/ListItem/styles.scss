@@ -1,1 +1,20 @@
-@use "../../styles/variables"
+@use "../../styles/variables";
+
+.listItemContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .itemActions {
+    display: inherit;
+    flex-direction: inherit;
+    gap: 8px;
+
+    .itemActionButton {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}
