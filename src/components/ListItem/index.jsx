@@ -1,4 +1,4 @@
-import { FaEdit, FaEye, FaTrash } from "../Icons";
+import { FaEdit, FaEye, MdDelete } from "../Icons";
 import "./styles.scss";
 const ListItem = ({ description, seeAction, updateAction, deleteAction }) => {
   return (
@@ -12,7 +12,7 @@ const ListItem = ({ description, seeAction, updateAction, deleteAction }) => {
           <FaEdit size={24} />
         </button>
         <button className="itemActionButton" onClick={deleteAction}>
-          <FaTrash size={24} />
+          <MdDelete size={24} />
         </button>
       </span>
     </div>
