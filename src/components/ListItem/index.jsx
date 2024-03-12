@@ -6,13 +6,13 @@ const ListItem = ({ description, seeAction, updateAction, deleteAction }) => {
       <span className="itemDescription">{description}</span>
       <span className="itemActions">
         <button className="itemActionButton" onClick={seeAction}>
-          <FaEye size={24} />
+          <FaEye size={20} />
         </button>
         <button className="itemActionButton" onClick={updateAction}>
-          <FaEdit size={24} />
+          <FaEdit size={20} />
         </button>
         <button className="itemActionButton" onClick={deleteAction}>
-          <MdDelete size={24} />
+          <MdDelete size={20} />
         </button>
       </span>
     </div>

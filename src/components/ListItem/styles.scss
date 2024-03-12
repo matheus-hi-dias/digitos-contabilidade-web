@@ -6,9 +6,15 @@
   justify-content: space-between;
   align-items: center;
 
+  .itemDescription {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
   .itemActions {
     display: inherit;
     flex-direction: inherit;
+    align-items: center;
     gap: 8px;
 
     .itemActionButton {
