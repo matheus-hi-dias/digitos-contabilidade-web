@@ -11,13 +11,13 @@ export const SideBar = () => {
           Minha Área
           </NavLink>
           
-        <NavLink to="/documentos" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Documento</NavLink>
-        <NavLink to="/clientes" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Cliente</NavLink>
+        <NavLink to="/documentos" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Documentos</NavLink>
+        <NavLink to="/clientes" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Clientes</NavLink>
         <NavLink to="/tipo-de-documento" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Tipo de Documento</NavLink>
         <NavLink to="/natureza" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Natureza</NavLink>
         <NavLink to="/local-do-documento" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Local do Documento</NavLink>
         <NavLink to="/usuarios" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Usuários</NavLink>
-        <NavLink to="/relatorios" className={ ({isActive}) => isActive ? activeRouteStyle : inactiveRouteStyle}>Relatórios</NavLink>
+
     </div>
   );
 };

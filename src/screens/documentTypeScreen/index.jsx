@@ -2,7 +2,7 @@ import List from "../../components/List";
 import ListItem from "../../components/ListItem";
 import "./styles.scss";
 
-const DocumentType = () => {
+const DocumentTypeScreen = () => {
   const documentTypeList = [
     { id: 1, cod_tipo_doc: 1, tipo_doc: "Recibo", temp_arquivamento: 5 },
     { id: 2, cod_tipo_doc: 1, tipo_doc: "Nota Fiscal", temp_arquivamento: 5 },
@@ -21,4 +21,4 @@ const DocumentType = () => {
   );
 };
 
-export default DocumentType;
+export default DocumentTypeScreen;
