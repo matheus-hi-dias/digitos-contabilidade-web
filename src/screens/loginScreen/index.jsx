@@ -1,11 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { Button, FaUser } from "../../components";
-import "./styles.scss";
-const LoginScreen = () => {
+import { useNavigate } from 'react-router-dom';
+import { Button, FaUser } from '../../components';
+import './styles.scss';
+
+function LoginScreen() {
   const navigate = useNavigate();
   const handleLogin = () => {
     navigate('/minha-area');
-  }
+  };
   return (
     <div className="loginScreen">
       <div className="loginContainer">
@@ -24,11 +25,11 @@ const LoginScreen = () => {
             id="password"
             placeholder="Senha"
           />
-          <Button variant={"primaryButton"} type="submit" text={"Entrar"} buttonCustomClass="loginButton" />
+          <Button variant="primaryButton" type="submit" text="Entrar" buttonCustomClass="loginButton" />
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default LoginScreen;

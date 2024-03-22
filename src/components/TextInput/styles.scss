@@ -1,4 +1,23 @@
 @use '../../styles/variables';
 .inputSearchContainer {
-  background-color: variables.$N300;
+  
+  height: 42px;
+  position: relative;
+
+  .inputSearch {
+    height: 100%;
+    width: 100%;
+    padding: 0 32px 0 8px;
+    background-color: variables.$N300;
+    
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .inputSearchIcon {
+    position: absolute;
+    font-size: 24px;
+    right: 8px;
+    top: 9px;
+  }
 }
