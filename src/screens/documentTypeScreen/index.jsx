@@ -1,5 +1,4 @@
-import List from "../../components/List";
-import ListItem from "../../components/ListItem";
+import { AddIcon, Button, List, ListItem, TextInput } from "../../components";
 import "./styles.scss";
 
 const DocumentTypeScreen = () => {
@@ -9,7 +8,10 @@ const DocumentTypeScreen = () => {
   ];
   return (
     <div className="documentTypeLayout">
-      <div className="documentSearchAddContainer"></div>
+      <div className="documentSearchAddContainer">
+        <Button variant={"secondaryButton"} icon={<AddIcon size={24}/>} text={"Adicionar"}/>
+        <TextInput/>
+      </div>
       <div className="documentTypeListContainer">
         <List>
           {documentTypeList.map((item) => {

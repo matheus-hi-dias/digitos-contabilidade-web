@@ -1,0 +1,27 @@
+@use '../../styles/variables';
+
+.genericButton {
+  cursor: pointer;
+  border: none;
+}
+
+.primaryButton {
+  background-color: variables.$SECONDARY_COLOR;
+  color: variables.$N000;
+  height: 52px;
+  border-radius: 8px;
+}
+
+.secondaryButton {
+ background-color: variables.$N300; 
+ color: rgba($color: variables.$N900, $alpha: 0.75);
+ padding: 12px;
+ border-radius: 12px;
+ display: flex;
+ flex-direction: row;
+ align-items: center;
+ gap: 8px;
+ .textButton {
+  font-size: 20px;
+}
+}
