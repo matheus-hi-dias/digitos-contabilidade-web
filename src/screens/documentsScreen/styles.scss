@@ -1,4 +1,4 @@
-@use "../../styles/variables";
+@use '../../styles/variables';
 
 .documentsLayout {
   width: 100%;
@@ -17,15 +17,18 @@
     justify-content: space-between;
     align-items: center;
   }
+  .documentsFilterContainer {
+    width: 90%;
+    height: 40%;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10%;
+  }
+
   .documentsListContainer {
     width: 90%;
-    height: 80%;
-    background-color: variables.$N300;
-    border-radius: 4px;
-    box-shadow: -4px 4px 4px rgba(#000, 0.1);
+    height: 40%;
   }
-  
 }
-
-
-

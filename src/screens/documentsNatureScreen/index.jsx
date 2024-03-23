@@ -18,11 +18,9 @@ function DocumentsNatureScreen() {
         <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" />
         <TextInput />
       </div>
-      <div className="documentNatureListContainer">
-        <List>
-          {documentTypeList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
-        </List>
-      </div>
+      <List containerClassName="documentNatureListContainer">
+        {documentTypeList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
+      </List>
     </div>
   );
 }

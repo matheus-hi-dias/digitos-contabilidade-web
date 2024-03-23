@@ -18,11 +18,9 @@ function UsersScreen() {
         <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" />
         <TextInput />
       </div>
-      <div className="usersListContainer">
-        <List>
-          {userList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
-        </List>
-      </div>
+      <List containerClassName="usersListContainer">
+        {userList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
+      </List>
     </div>
   );
 }

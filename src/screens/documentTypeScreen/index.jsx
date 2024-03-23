@@ -18,11 +18,9 @@ function DocumentTypeScreen() {
         <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" />
         <TextInput />
       </div>
-      <div className="documentTypeListContainer">
-        <List>
-          {documentTypeList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
-        </List>
-      </div>
+      <List containerClassName="documentTypeListContainer">
+        {documentTypeList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
+      </List>
     </div>
   );
 }

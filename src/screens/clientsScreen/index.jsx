@@ -19,11 +19,9 @@ function ClientsScreen() {
         <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" />
         <TextInput />
       </div>
-      <div className="clientsListContainer">
-        <List>
-          {clientsList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
-        </List>
-      </div>
+      <List containerClassName="clientsListContainer">
+        {clientsList.map((item) => <ListItem description={item.tipo_doc} key={item.id} />)}
+      </List>
     </div>
   );
 }
