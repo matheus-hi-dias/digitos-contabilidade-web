@@ -1,15 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ScreensLayout from "./layout/ScreensLayout";
-import LoginScreen from "./screens/loginScreen";
-import DocumentTypeScreen from "./screens/documentTypeScreen";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ScreensLayout from './layout/ScreensLayout';
+import LoginScreen from './screens/loginScreen';
+import DocumentTypeScreen from './screens/documentTypeScreen';
 
-import "./App.css";
-import MyAreaScreen from "./screens/myAreaScreen";
-import DocumentsScreen from "./screens/documentsScreen";
-import ClientsScreen from "./screens/clientsScreen";
-import DocumentsNatureScreen from "./screens/documentsNatureScreen";
-import DocumentStorageLocalScreen from "./screens/documentStorageLocalScreen";
-import UsersScreen from "./screens/usersScreen";
+import './App.css';
+import MyAreaScreen from './screens/myAreaScreen';
+import DocumentsScreen from './screens/documentsScreen';
+import ClientsScreen from './screens/clientsScreen';
+import DocumentsNatureScreen from './screens/documentsNatureScreen';
+import DocumentStorageLocalScreen from './screens/documentStorageLocalScreen';
+import UsersScreen from './screens/usersScreen';
 
 function App() {
   return (
