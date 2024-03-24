@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, TextInput,
 } from '../../components';
@@ -48,6 +49,28 @@ function DocumentsScreen() {
       temp_arquivamento: 5,
     },
   ];
+
+  const [selectedDocumentTypes, setSelectedDocumentTypes] = useState([]);
+  const [selectedClients, setSelectedClients] = useState([]);
+
+  const handleDocumentTypeToggle = (id) => {
+    const index = selectedDocumentTypes.indexOf(id);
+    if (index === -1) {
+      setSelectedDocumentTypes([...selectedDocumentTypes, id]);
+    } else {
+      setSelectedDocumentTypes(selectedDocumentTypes.filter((item) => item !== id));
+    }
+  };
+
+  const handleClientsToggle = (id) => {
+    const index = selectedClients.indexOf(id);
+    if (index === -1) {
+      setSelectedClients([...selectedClients, id]);
+    } else {
+      setSelectedClients(selectedClients.filter((item) => item !== id));
+    }
+  };
+
   return (
     <div className="documentsLayout">
       <div className="documentsSearchAddContainer">
@@ -59,16 +82,39 @@ function DocumentsScreen() {
         <TextInput />
       </div>
       <div className="documentsFilterContainer">
-        <List>
-          {documentTypeList.map((item) => (
-            <ListItem description={item.tipo_doc} key={item.id} />
-          ))}
-        </List>
-        <List>
-          {clientsList.map((item) => (
-            <ListItem description={item.tipo_doc} key={item.id} />
-          ))}
-        </List>
+        <div className="documentsFilterContentDiv">
+          <div>Tipo de documento</div>
+          <List>
+            {documentTypeList.map((item) => (
+              <label key={item.id} htmlFor={item.id}>
+                <input
+                  type="checkbox"
+                  name={item.id}
+                  checked={selectedDocumentTypes.includes(item.id)}
+                  onChange={() => handleDocumentTypeToggle(item.id)}
+                />
+                {item.tipo_doc}
+              </label>
+            ))}
+          </List>
+        </div>
+
+        <div className="documentsFilterContentDiv">
+          <div>Cliente</div>
+          <List>
+            {clientsList.map((item) => (
+              <label key={item.id} htmlFor={item.id}>
+                <input
+                  type="checkbox"
+                  name={item.id}
+                  checked={selectedClients.includes(item.id)}
+                  onChange={() => handleClientsToggle(item.id)}
+                />
+                {item.tipo_doc}
+              </label>
+            ))}
+          </List>
+        </div>
       </div>
       <List containerClassName="documentsListContainer">
         {documentsList.map((item) => (

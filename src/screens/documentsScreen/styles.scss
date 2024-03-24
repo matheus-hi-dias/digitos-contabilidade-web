@@ -25,6 +25,19 @@
     flex-direction: row;
     justify-content: space-between;
     gap: 10%;
+
+    .documentsFilterContentDiv {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      div {
+        label {
+          input {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
   }
 
   .documentsListContainer {

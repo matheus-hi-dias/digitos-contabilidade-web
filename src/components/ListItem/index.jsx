@@ -1,7 +1,8 @@
-// eslint-disable-next-line import/no-cycle
+import React from 'react';
 import {
-  Button, FaEdit, FaEye, MdDelete,
-} from '..';
+  FaEdit, FaEye, MdDelete,
+} from '../Icons';
+import Button from '../Button';
 import './styles.scss';
 
 function ListItem({
@@ -11,9 +12,9 @@ function ListItem({
     <div className="listItemContainer">
       <span className="itemDescription">{description}</span>
       <span className="itemActions">
-        <Button buttonCustomClass="itemActionButton" icon={<FaEye size={20} />} onClick={seeAction} />
-        <Button buttonCustomClass="itemActionButton" icon={<FaEdit size={20} />} onClick={updateAction} />
-        <Button buttonCustomClass="itemActionButton" icon={<MdDelete size={20} />} onClick={deleteAction} />
+        <Button data-testid="see-button" buttonCustomClass="itemActionButton" icon={<FaEye size={20} />} onClick={seeAction} />
+        <Button data-testid="update-button" buttonCustomClass="itemActionButton" icon={<FaEdit size={20} />} onClick={updateAction} />
+        <Button data-testid="delete-button" buttonCustomClass="itemActionButton" icon={<MdDelete size={20} />} onClick={deleteAction} />
       </span>
     </div>
   );

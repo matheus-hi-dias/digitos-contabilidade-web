@@ -1,37 +1,50 @@
+import { useState } from 'react';
 import { Button } from '../../components';
 import './styles.scss';
 
 function DocumentStorageLocalScreen() {
   const options = [{
-    id: 0,
+    id: '',
     value: '',
   }, {
-    id: 1,
-    value: 'Fisico',
+    id: '1',
+    value: 'Físico',
   }, {
-    id: 1,
+    id: '2',
     value: 'Digital',
   }];
+  const [selectedNature, setSelectedNature] = useState('');
+
+  const handleNatureChange = (event) => {
+    const { value } = event.target;
+    setSelectedNature(value);
+  };
+
   return (
     <div className="documentStorageLocalScreen">
-      <div className="selectInputContainer">
-        <label htmlFor="documentNatureSelect">
-          Natureza:
-          <select name="documentNatureSelect" id="documentNatureSelect">
-            {options.map((item) => (
-              <option key={item.id} value={item.id}>{item.value}</option>
-            ))}
-          </select>
-        </label>
-        <label htmlFor="documentNatureInput">
-          Local:
-          <input type="text" name="documentNatureInput" id="documentNatureInput" />
-        </label>
-      </div>
-      <div>
+      <div className="documentStorageContentContainer">
 
-        <Button variant="primaryButton" text="Cadastrar" />
-        <Button variant="primaryButton" text="Cancelar" />
+        <div className="selectInputContainer">
+          <label htmlFor="documentNatureSelect">
+            Natureza:
+            <select name="documentNatureSelect" id="documentNatureSelect" className="documentNatureInteractive documentNatureSelect" value={selectedNature} onChange={handleNatureChange}>
+              {options.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.value}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label htmlFor="documentNatureInput">
+            Local:
+            <input type="text" name="documentNatureInput" id="documentNatureInput" className="documentNatureInteractive documentNatureInput" />
+          </label>
+        </div>
+        <div className="buttonLocalContainer">
+
+          <Button buttonCustomClass="buttonDocLocalCustomClass" variant="primaryButton" text="Cadastrar" />
+          <Button buttonCustomClass="buttonDocLocalCustomClass" variant="primaryButton" text="Cancelar" />
+        </div>
       </div>
     </div>
   );

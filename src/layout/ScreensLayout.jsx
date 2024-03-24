@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom";
-import { SideBar } from "./sideBar";
-import "./styles.scss";
+import { Outlet } from 'react-router-dom';
+import SideBar from './sideBar';
+import './styles.scss';
 
-const ScreensLayout = () => {
+function ScreensLayout() {
   return (
     <div className="dashboardLayoutContainer">
       <aside className="sideBar">
@@ -13,5 +13,5 @@ const ScreensLayout = () => {
       </main>
     </div>
   );
-};
+}
 export default ScreensLayout;
