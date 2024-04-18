@@ -11,3 +11,5 @@ export * from './Icons';
 export {
   default as TextInput,
 } from './TextInput';
+
+export { default as Modal } from './Modal';
