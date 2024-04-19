@@ -6,11 +6,11 @@ import { Close } from '../Icons';
 function Modal({ children, onClose, customModalClass }) {
   return ReactDOM.createPortal(
     <div className="modalWrapper">
-      <div className="modal">
+      <div className={`modal ${customModalClass || ''}`}>
         <button onClick={onClose} type="button" className="modalCloseButton">
           <Close size={24} />
         </button>
-        <div className={`modalContent ${customModalClass || ''}`}>
+        <div className="modalContent">
           {children}
         </div>
       </div>
