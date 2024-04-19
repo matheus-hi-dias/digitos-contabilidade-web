@@ -10,19 +10,26 @@
   color: variables.$N000;
   height: 52px;
   border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: darken(variables.$SECONDARY_COLOR, 10%);
+  }
 }
 
 .secondaryButton {
- background-color: variables.$N300; 
- color: rgba($color: variables.$N900, $alpha: 0.75);
- padding: 0 12px;
- border-radius: 12px;
- height: 42px;
- display: flex;
- flex-direction: row;
- align-items: center;
- gap: 8px;
+  background-color: variables.$N300;
+  color: rgba($color: variables.$N900, $alpha: 0.75);
+  padding: 0 12px;
+  border-radius: 12px;
+  height: 42px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
  .textButton {
-  font-size: 20px;
-}
+    font-size: 20px;
+  }
+  &:hover {
+    background-color: darken(variables.$N300, 10%);
+  }
 }
