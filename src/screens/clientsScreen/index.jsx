@@ -1,21 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, TextInput,
 } from '../../components';
+import personTypeList from '../../constants/personTypeList';
 import './styles.scss';
 
 function ClientsScreen() {
   const clientsList = [
     {
-      id: 1, cod_tipo_doc: 1, tipo_doc: 'Joaozinho', temp_arquivamento: 5,
+      id: 1, name: 'Joaozinho', personType: 'F', cpfCnpj: '01234567890',
     },
     {
-      id: 2, cod_tipo_doc: 1, tipo_doc: 'Empresa Ltda', temp_arquivamento: 5,
+      id: 2, name: 'Empresa Ltda', personType: 'J', cpfCnpj: '01234567890',
     },
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalChildren, setModalChildren] = useState(null);
+  const [clientData, setClientData] = useState({
+    name: '',
+    personType: '',
+    cpfCnpj: '',
+  });
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -23,78 +29,119 @@ function ClientsScreen() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setClientData({
+      name: '',
+      personType: '',
+      cpfCnpj: '',
+    });
+  };
+
+  const handleClientData = (e) => {
+    setClientData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const openCreateClientModal = () => {
     handleOpenModal();
     setModalChildren(
       <div className="clientModal">
-        <label htmlFor="clientName">
+        <label htmlFor="name">
           Nome*:
-          <input type="text" name="clientName" />
+          <input type="text" name="name" onChange={handleClientData} />
         </label>
 
         <label htmlFor="personType">
           Tipo*:
-          <select type="text" name="personType">
-            {clientsList.map((item) => (
-              <option key={item.id} value={item.cod_tipo_doc}>{item.tipo_doc}</option>
+          <select type="text" name="personType" onChange={handleClientData}>
+            {personTypeList.map((item) => (
+              <option key={item.id} value={item.id}>{item.value}</option>
             ))}
           </select>
         </label>
 
         <label htmlFor="cpfCnpj">
           CPF/CNPJ*:
-          <input type="text" name="cpfCnpj" />
+          <input type="text" name="cpfCnpj" onChange={handleClientData} />
         </label>
+        <div className="clientButtonsContainer">
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+        </div>
       </div>,
     );
   };
 
-  const openSeeClientModal = () => {
+  const openSeeClientModal = (id) => {
+    const selectedClientData = clientsList.find((item) => item.id === id);
+    setClientData(selectedClientData);
     handleOpenModal();
     setModalChildren(
       <div className="clientModal">
-        <label htmlFor="clientName">
+        <label htmlFor="name">
           Nome:
-          <input type="text" name="clientName" />
+          <input type="text" name="name" readOnly value={selectedClientData.name} />
         </label>
 
         <label htmlFor="personType">
           Tipo:
-          <input type="text" name="personType" />
+          <input type="text" name="personType" disabled value={selectedClientData.personType} />
         </label>
 
         <label htmlFor="cpfCnpj">
           CPF/CNPJ:
-          <input type="text" name="cpfCnpj" />
+          <input type="text" name="cpfCnpj" disabled value={selectedClientData.cpfCnpj} />
         </label>
+        <div className="clientButtonsContainer">
+          <Button variant="primaryButton" text="Sair" onClick={handleCloseModal} />
+        </div>
       </div>,
     );
   };
 
-  const openUpdateClientModal = () => {
+  const openUpdateClientModal = (id) => {
+    const selectedClientData = clientsList.find((item) => item.id === id);
+    setClientData(selectedClientData);
     handleOpenModal();
     setModalChildren(
       <div className="clientModal">
-        <label htmlFor="clientName">
+        <label htmlFor="name">
           Nome*:
-          <input type="text" name="clientName" />
+          <input type="text" name="name" defaultValue={selectedClientData.name} onChange={handleClientData} />
         </label>
 
         <label htmlFor="personType">
           Tipo*:
-          <select type="text" name="personType">
-            {clientsList.map((item) => (
-              <option key={item.id} value={item.cod_tipo_doc}>{item.tipo_doc}</option>
+          <select type="text" name="personType" defaultValue={selectedClientData.personType} onChange={handleClientData}>
+            {personTypeList.map((item) => (
+              <option key={item.id} value={item.id}>{item.value}</option>
             ))}
           </select>
         </label>
 
         <label htmlFor="cpfCnpj">
           CPF/CNPJ*:
-          <input type="text" name="cpfCnpj" />
+          <input type="text" name="cpfCnpj" defaultValue={selectedClientData.cpfCnpj} onChange={handleClientData} />
         </label>
+        <div className="clientButtonsContainer">
+          <Button variant="primaryButton" text="Alterar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+        </div>
+      </div>,
+    );
+  };
+
+  useEffect(() => { console.log(clientData); }, [clientData]);
+
+  const openDeleteClientModal = () => {
+    handleOpenModal();
+    setModalChildren(
+      <div className="clientModal">
+        <div className="clientButtonsContainer">
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+        </div>
       </div>,
     );
   };
@@ -108,10 +155,11 @@ function ClientsScreen() {
       <List containerClassName="clientsListContainer">
         {clientsList.map((item) => (
           <ListItem
-            description={item.tipo_doc}
+            description={item.name}
             key={item.id}
-            seeAction={openSeeClientModal}
-            updateAction={openUpdateClientModal}
+            seeAction={() => openSeeClientModal(item.id)}
+            updateAction={() => openUpdateClientModal(item.id)}
+            deleteAction={openDeleteClientModal}
           />
         ))}
       </List>
