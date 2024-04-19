@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import './styles.scss';
 import { Close } from '../Icons';
 
-function Modal({ children, onClose }) {
+function Modal({ children, onClose, customModalClass }) {
   return ReactDOM.createPortal(
     <div className="modalWrapper">
       <div className="modal">
         <button onClick={onClose} type="button" className="modalCloseButton">
           <Close size={24} />
         </button>
-        <div className="modalContent">
+        <div className={`modalContent ${customModalClass || ''}`}>
           {children}
         </div>
       </div>

@@ -34,11 +34,51 @@
     }
 
     .modalContent {
-      padding: 16px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      padding: 16px 48px 0 48px;
+      gap: 24px;
+      color: variables.$N000;
+
+      label {
+        font-size: variables.$FONT-MEDIUM;
+        display: flex;
+        justify-content: space-between;
+        gap: 32px;
+        input,
+        select {
+          background-color: rgba(variables.$N300, 0.4);
+          border: none;
+          box-shadow: 0px 4px 4px rgba(variables.$N900, 0.25);
+          outline: none;
+          border-radius: 8px;
+          color: variables.$N000;
+          padding: 8px;
+          height: 45px;
+
+          option {
+            color: variables.$N1000;
+          }
+        }
+      }
+
+      .modalButtonsContainer {
+        padding: 48px 0 24px 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+        button {
+          padding: 8px 48px;
+        }
+      }
     }
   }
 }
 
+.modalCustom {
+
+}
