@@ -1,55 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, TextInput,
+  AddIcon, Button, List, ListItem, Modal, TextInput,
 } from '../../components';
 import './styles.scss';
 
+import {
+  documentTypeList, documentsList, clientsList, documentNatureList,
+  documentLocalList,
+} from '../../constants/mocks';
+import { formatDate } from '../../utils/formatDate';
+
 function DocumentsScreen() {
-  const documentTypeList = [
-    {
-      id: 1,
-      cod_tipo_doc: 1,
-      tipo_doc: 'Recibo',
-      temp_arquivamento: 5,
-    },
-    {
-      id: 2,
-      cod_tipo_doc: 1,
-      tipo_doc: 'Nota Fiscal',
-      temp_arquivamento: 5,
-    },
-  ];
-
-  const clientsList = [
-    {
-      id: 1,
-      cod_tipo_doc: 1,
-      tipo_doc: 'Joao',
-      temp_arquivamento: 5,
-    },
-    {
-      id: 2,
-      cod_tipo_doc: 1,
-      tipo_doc: 'Empresa Ltda.',
-      temp_arquivamento: 5,
-    },
-  ];
-
-  const documentsList = [
-    {
-      id: 1,
-      cod_tipo_doc: 1,
-      tipo_doc: 'Documento 1',
-      temp_arquivamento: 5,
-    },
-    {
-      id: 2,
-      cod_tipo_doc: 1,
-      tipo_doc: 'Documento 2',
-      temp_arquivamento: 5,
-    },
-  ];
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalChildren, setModalChildren] = useState(null);
+  const [documentData, setDocumentData] = useState({
+    document_code: undefined,
+    name: '',
+    archiving_date: undefined,
+    nature_id: undefined,
+    location_id: undefined,
+    doc_type_id: undefined,
+    client_id: undefined,
+    employee_id: undefined,
+  });
   const [selectedDocumentTypes, setSelectedDocumentTypes] = useState([]);
   const [selectedClients, setSelectedClients] = useState([]);
 
@@ -71,6 +44,197 @@ function DocumentsScreen() {
     }
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setDocumentData({
+      document_code: undefined,
+      name: '',
+      archiving_date: undefined,
+      nature_id: undefined,
+      location_id: undefined,
+      doc_type_id: undefined,
+      client_id: undefined,
+      employee_id: undefined,
+    });
+  };
+
+  const handleDocumentData = (e) => {
+    setDocumentData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const openCreateDocumentModal = () => {
+    handleOpenModal();
+    setModalChildren(
+      <>
+        <label htmlFor="document_code">
+          Código*:
+          <input type="text" name="document_code" onChange={handleDocumentData} />
+        </label>
+        <label htmlFor="name">
+          Nome*:
+          <input type="text" name="name" onChange={handleDocumentData} />
+        </label>
+        <label htmlFor="doc_type_id">
+          Tipo*:
+          <select type="text" name="doc_type_id" onChange={handleDocumentData}>
+            {documentTypeList.map((item) => (
+              <option key={item.id} value={item.id}>{item.doc_type}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="client_id">
+          Cliente*:
+          <select type="text" name="client_id" onChange={handleDocumentData}>
+            {clientsList.map((item) => (
+              <option key={item.id} value={item.id}>{item.name.concat(` (${item.cpfCnpj})`)}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="nature_id">
+          Natureza*:
+          <select type="text" name="nature_id" onChange={handleDocumentData}>
+            {documentNatureList.map((item) => (
+              <option key={item.id} value={item.id}>{item.nature}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="location_id">
+          Local/caminho*:
+          <select type="text" name="location_id" onChange={handleDocumentData}>
+            {documentLocalList.map((item) => (
+              <option key={item.id} value={item.id}>{item.doc_location}</option>
+            ))}
+          </select>
+        </label>
+        <div className="modalButtonsContainer">
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+        </div>
+      </>,
+    );
+  };
+
+  const openSeeDocumentModal = (documentCode) => {
+    const selectedDocumentData = documentsList.find((item) => item.document_code === documentCode);
+    setDocumentData(selectedDocumentData);
+    handleOpenModal();
+    setModalChildren(
+      <>
+        <label htmlFor="document_code">
+          Código:
+          <input type="text" disabled name="document_code" value={selectedDocumentData.document_code} />
+        </label>
+        <label htmlFor="name">
+          Nome:
+          <input type="text" disabled name="name" value={selectedDocumentData.name} />
+        </label>
+        <label htmlFor="name">
+          Tipo:
+          <input type="text" disabled name="name" value={selectedDocumentData.doc_type_id} />
+        </label>
+        <label htmlFor="name">
+          Cliente:
+          <input type="text" disabled name="name" value={selectedDocumentData.client_id} />
+        </label>
+        <label htmlFor="name">
+          Natureza:
+          <input type="text" disabled name="name" value={selectedDocumentData.nature_id} />
+        </label>
+        <label htmlFor="name">
+          Local/caminho:
+          <input type="text" disabled name="name" value={selectedDocumentData.location_id} />
+        </label>
+        <label htmlFor="name">
+          Data cadastro:
+          <input type="date" disabled name="name" value={formatDate(selectedDocumentData.archiving_date)} />
+        </label>
+        <label htmlFor="name">
+          Data vencimento:
+          <input type="date" disabled name="name" value={formatDate(selectedDocumentData.archiving_date)} />
+        </label>
+        <div className="modalButtonsContainer">
+          <Button variant="primaryButton" text="Sair" onClick={handleCloseModal} />
+        </div>
+      </>,
+    );
+  };
+
+  const openUpdateDocumentModal = (documentCode) => {
+    const selectedDocumentData = documentsList.find((item) => item.document_code === documentCode);
+    setDocumentData(selectedDocumentData);
+    handleOpenModal();
+    setModalChildren(
+      <>
+        <label htmlFor="document_code">
+          Código*:
+          <input type="text" name="document_code" disabled readOnly defaultValue={selectedDocumentData.document_code} onChange={handleDocumentData} />
+        </label>
+        <label htmlFor="name">
+          Nome*:
+          <input type="text" name="name" defaultValue={selectedDocumentData.name} onChange={handleDocumentData} />
+        </label>
+        <label htmlFor="doc_type_id">
+          Tipo*:
+          <select type="text" name="doc_type_id" defaultValue={selectedDocumentData.doc_type_id} onChange={handleDocumentData}>
+            {documentTypeList.map((item) => (
+              <option key={item.id} value={item.id}>{item.doc_type}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="client_id">
+          Cliente*:
+          <select type="text" name="client_id" defaultValue={selectedDocumentData.client_id} onChange={handleDocumentData}>
+            {clientsList.map((item) => (
+              <option key={item.id} value={item.id}>{item.name.concat(` (${item.cpfCnpj})`)}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="nature_id">
+          Natureza*:
+          <select type="text" name="nature_id" defaultValue={selectedDocumentData.nature_id} onChange={handleDocumentData}>
+            {documentNatureList.map((item) => (
+              <option key={item.id} value={item.id}>{item.nature}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="location_id">
+          Local/caminho*:
+          <select type="text" name="location_id" defaultValue={selectedDocumentData.location_id} onChange={handleDocumentData}>
+            {documentLocalList.map((item) => (
+              <option key={item.id} value={item.id}>{item.doc_location}</option>
+            ))}
+          </select>
+        </label>
+        <div className="modalButtonsContainer">
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+        </div>
+      </>,
+    );
+  };
+
+  useEffect(() => { }, [documentData]);
+
+  const openDeleteDocumentModal = () => {
+    handleOpenModal();
+    setModalChildren(
+      <>
+        <h2>Deletar documento?</h2>
+        <div className="modalButtonsContainer">
+          <Button variant="primaryButton" text="Deletar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+        </div>
+      </>,
+    );
+  };
+
   return (
     <div className="documentsLayout">
       <div className="documentsSearchAddContainer">
@@ -78,6 +242,7 @@ function DocumentsScreen() {
           variant="secondaryButton"
           icon={<AddIcon size={24} />}
           text="Adicionar"
+          onClick={openCreateDocumentModal}
         />
         <TextInput />
       </div>
@@ -93,7 +258,7 @@ function DocumentsScreen() {
                   checked={selectedDocumentTypes.includes(item.id)}
                   onChange={() => handleDocumentTypeToggle(item.id)}
                 />
-                {item.tipo_doc}
+                {item.doc_type}
               </label>
             ))}
           </List>
@@ -110,7 +275,7 @@ function DocumentsScreen() {
                   checked={selectedClients.includes(item.id)}
                   onChange={() => handleClientsToggle(item.id)}
                 />
-                {item.tipo_doc}
+                {item.name.concat(` (${item.cpfCnpj})`)}
               </label>
             ))}
           </List>
@@ -118,9 +283,21 @@ function DocumentsScreen() {
       </div>
       <List containerClassName="documentsListContainer">
         {documentsList.map((item) => (
-          <ListItem description={item.tipo_doc} key={item.id} />
+          <ListItem
+            description={item.document_code.toString().concat(' - ').concat(item.name)}
+            key={item.document_code}
+            seeAction={() => openSeeDocumentModal(item.document_code)}
+            updateAction={() => openUpdateDocumentModal(item.document_code)}
+            deleteAction={() => openDeleteDocumentModal(item.document_code)}
+          />
         ))}
       </List>
+      {isModalOpen
+      && (
+      <Modal onClose={handleCloseModal}>
+        {modalChildren}
+      </Modal>
+      )}
     </div>
   );
 }

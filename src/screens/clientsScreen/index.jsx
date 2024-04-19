@@ -46,7 +46,7 @@ function ClientsScreen() {
   const openCreateClientModal = () => {
     handleOpenModal();
     setModalChildren(
-      <div className="clientModal">
+      <>
         <label htmlFor="name">
           Nome*:
           <input type="text" name="name" onChange={handleClientData} />
@@ -65,11 +65,11 @@ function ClientsScreen() {
           CPF/CNPJ*:
           <input type="text" name="cpfCnpj" onChange={handleClientData} />
         </label>
-        <div className="clientButtonsContainer">
+        <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
-      </div>,
+      </>,
     );
   };
 
@@ -78,7 +78,7 @@ function ClientsScreen() {
     setClientData(selectedClientData);
     handleOpenModal();
     setModalChildren(
-      <div className="clientModal">
+      <>
         <label htmlFor="name">
           Nome:
           <input type="text" name="name" readOnly value={selectedClientData.name} />
@@ -93,10 +93,10 @@ function ClientsScreen() {
           CPF/CNPJ:
           <input type="text" name="cpfCnpj" disabled value={selectedClientData.cpfCnpj} />
         </label>
-        <div className="clientButtonsContainer">
+        <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Sair" onClick={handleCloseModal} />
         </div>
-      </div>,
+      </>,
     );
   };
 
@@ -105,7 +105,7 @@ function ClientsScreen() {
     setClientData(selectedClientData);
     handleOpenModal();
     setModalChildren(
-      <div className="clientModal">
+      <>
         <label htmlFor="name">
           Nome*:
           <input type="text" name="name" defaultValue={selectedClientData.name} onChange={handleClientData} />
@@ -124,25 +124,26 @@ function ClientsScreen() {
           CPF/CNPJ*:
           <input type="text" name="cpfCnpj" defaultValue={selectedClientData.cpfCnpj} onChange={handleClientData} />
         </label>
-        <div className="clientButtonsContainer">
+        <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Alterar" onClick={handleCloseModal} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
-      </div>,
+      </>,
     );
   };
 
-  useEffect(() => { console.log(clientData); }, [clientData]);
+  useEffect(() => { }, [clientData]);
 
   const openDeleteClientModal = () => {
     handleOpenModal();
     setModalChildren(
-      <div className="clientModal">
-        <div className="clientButtonsContainer">
+      <>
+        <h2>Deletar cliente?</h2>
+        <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
-      </div>,
+      </>,
     );
   };
 

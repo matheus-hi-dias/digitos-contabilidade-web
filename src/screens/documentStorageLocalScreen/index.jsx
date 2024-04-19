@@ -2,17 +2,9 @@ import { useState } from 'react';
 import { Button } from '../../components';
 import './styles.scss';
 
+import { documentLocalList } from '../../constants/mocks';
+
 function DocumentStorageLocalScreen() {
-  const options = [{
-    id: '',
-    value: '',
-  }, {
-    id: '1',
-    value: 'Físico',
-  }, {
-    id: '2',
-    value: 'Digital',
-  }];
   const [selectedNature, setSelectedNature] = useState('');
 
   const handleNatureChange = (event) => {
@@ -28,7 +20,7 @@ function DocumentStorageLocalScreen() {
           <label htmlFor="documentNatureSelect">
             Natureza:
             <select name="documentNatureSelect" id="documentNatureSelect" className="documentNatureInteractive documentNatureSelect" value={selectedNature} onChange={handleNatureChange}>
-              {options.map((item) => (
+              {documentLocalList.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.value}
                 </option>
