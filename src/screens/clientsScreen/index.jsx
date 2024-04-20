@@ -266,8 +266,8 @@ function ClientsScreen() {
               setIsModalUpdateOpen(true);
               setIsModalOpen(true);
             }}
-            deleteAction={() => {
-              setClientData({ ...item });
+            deleteAction={async () => {
+              setClientData(await getClientById(item.id));
               setIsModalDeleteOpen(true);
               setIsModalOpen(true);
             }}
@@ -280,7 +280,7 @@ function ClientsScreen() {
         (isModalCreateOpen && (openCreateClientModal()))
         || (isModalSeeOpen && (openSeeClientModal()))
         || (isModalUpdateOpen && (openUpdateClientModal()))
-        || (isModalDeleteOpen && (openDeleteClientModal('teste')))
+        || (isModalDeleteOpen && (openDeleteClientModal()))
       }
       </Modal>
       )}

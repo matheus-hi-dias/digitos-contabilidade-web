@@ -4,14 +4,23 @@ import {
 } from '../../components';
 import './styles.scss';
 
-import { documentNatureList } from '../../constants/mocks';
+import {
+  createNature, deleteNature, getNatureById, getNatures, updateNature,
+} from '../../services/documentsNature';
 
 function DocumentsNatureScreen() {
+  const [documentNatureList, setDocumentNatureList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalChildren, setModalChildren] = useState(null);
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [natureData, setNatureData] = useState({
     nature: '',
   });
+
+  useEffect(() => {
+    getNatures().then((resp) => setDocumentNatureList(resp));
+  }, [isModalOpen]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -19,6 +28,9 @@ function DocumentsNatureScreen() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setIsModalCreateOpen(false);
+    setIsModalUpdateOpen(false);
+    setIsModalDeleteOpen(false);
     setNatureData({
       nature: '',
     });
@@ -31,59 +43,86 @@ function DocumentsNatureScreen() {
     }));
   };
 
+  const handleCreateNature = async (event) => {
+    event.preventDefault();
+    console.log({ natureData });
+    await createNature(natureData);
+    handleCloseModal();
+  };
+
+  const handleUpdateNature = async (event) => {
+    event.preventDefault();
+    console.log({ natureData });
+    await updateNature(natureData.id, natureData);
+    handleCloseModal();
+  };
+
+  const handleDeleteNature = async (event) => {
+    event.preventDefault();
+    console.log({ natureData });
+    await deleteNature(natureData.id);
+    handleCloseModal();
+  };
+
   const openCreateNatureModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalCreateOpen) return null;
+    return (
       <>
         <label htmlFor="nature">
           Natureza do documento*:
           <input type="text" name="nature" onChange={handleNatureData} />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleCreateNature} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openUpdateNatureModal = (id) => {
-    const selectedClientData = documentNatureList.find((item) => item.id === id);
-    setNatureData(selectedClientData);
-    handleOpenModal();
-    setModalChildren(
+  const openUpdateNatureModal = () => {
+    if (!isModalUpdateOpen) return null;
+    return (
       <>
         <label htmlFor="nature">
           Natureza do documento*:
-          <input type="text" name="nature" onChange={handleNatureData} />
+          <input type="text" name="nature" defaultValue={natureData.nature} onChange={handleNatureData} />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Alterar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Alterar" onClick={handleUpdateNature} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
-      </>,
+      </>
     );
   };
 
   useEffect(() => { }, [natureData]);
 
   const openDeleteNatureModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalDeleteOpen) return null;
+    return (
       <>
         <h2>Deletar natureza?</h2>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Deletar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Deletar" onClick={handleDeleteNature} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
-      </>,
+      </>
     );
   };
 
   return (
     <div className="documentNatureLayout">
       <div className="documentNatureSearchAddContainer">
-        <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" onClick={openCreateNatureModal} />
+        <Button
+          variant="secondaryButton"
+          icon={<AddIcon size={24} />}
+          text="Adicionar"
+          onClick={() => {
+            setIsModalCreateOpen(true);
+            handleOpenModal();
+          }}
+        />
         <TextInput />
       </div>
       <List containerClassName="documentNatureListContainer">
@@ -92,8 +131,16 @@ function DocumentsNatureScreen() {
             description={item.nature}
             key={item.id}
             seeButton={false}
-            updateAction={() => openUpdateNatureModal(item.id)}
-            deleteAction={openDeleteNatureModal}
+            updateAction={async () => {
+              setNatureData(await getNatureById(item.id));
+              setIsModalUpdateOpen(true);
+              handleOpenModal();
+            }}
+            deleteAction={async () => {
+              setNatureData(await getNatureById(item.id));
+              setIsModalDeleteOpen(true);
+              handleOpenModal();
+            }}
           />
         ))}
       </List>
@@ -101,7 +148,11 @@ function DocumentsNatureScreen() {
       {isModalOpen
       && (
       <Modal onClose={handleCloseModal}>
-        {modalChildren}
+        {
+        (isModalCreateOpen && (openCreateNatureModal()))
+        || (isModalUpdateOpen && (openUpdateNatureModal()))
+        || (isModalDeleteOpen && (openDeleteNatureModal()))
+      }
       </Modal>
       )}
     </div>
