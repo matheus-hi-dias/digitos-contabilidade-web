@@ -118,3 +118,20 @@ export const roleList = [
     role: 'teste2',
   },
 ];
+
+export const userList = [
+  {
+    id: 1,
+    email: 'teste@email.com',
+    username: 'teste',
+    name: 'teste testado',
+    role_id: 3,
+  },
+  {
+    id: 2,
+    email: 'teste2@email.com',
+    username: 'teste2',
+    name: 'teste2',
+    role_id: 4,
+  },
+];
