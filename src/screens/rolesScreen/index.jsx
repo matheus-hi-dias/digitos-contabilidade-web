@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, TextInput,
 } from '../../components';
+import permissions from '../../constants/permissions';
 import './styles.scss';
 
 import { roleList } from '../../constants/mocks';
@@ -12,6 +13,18 @@ function RolesScreen() {
   const [roleData, setRoleData] = useState({
     role: '',
   });
+
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+
+  const handlePermissionsToggle = (key) => {
+    const newSelection = selectedPermissions.includes(key)
+      ? selectedPermissions.filter((item) => item !== key)
+      : [...selectedPermissions, key];
+    console.log({ newSelection });
+    setSelectedPermissions(newSelection);
+  };
+
+  useEffect(() => { console.log({ selectedPermissions }); }, [selectedPermissions]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -39,6 +52,22 @@ function RolesScreen() {
           Cargo*:
           <input type="text" name="role" onChange={handleRoleData} />
         </label>
+        <div className="permissionsContainer">
+          Permissões:
+          <List containerClassName="permissionListContainer">
+            {Object.keys(permissions).map((key) => (
+              <label key={key} htmlFor={permissions[key]}>
+                <input
+                  type="checkbox"
+                  name={key}
+                  checked={selectedPermissions.includes(key)}
+                  onChange={() => handlePermissionsToggle(key)}
+                />
+                {permissions[key]}
+              </label>
+            ))}
+          </List>
+        </div>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
