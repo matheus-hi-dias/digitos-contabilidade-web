@@ -220,7 +220,7 @@ function DocumentsScreen() {
     );
   };
 
-  useEffect(() => { }, [documentData]);
+  useEffect(() => { console.log(documentData); }, [documentData]);
 
   const openDeleteDocumentModal = () => {
     handleOpenModal();

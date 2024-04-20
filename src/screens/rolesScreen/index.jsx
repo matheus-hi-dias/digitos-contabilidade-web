@@ -20,7 +20,6 @@ function RolesScreen() {
     const newSelection = selectedPermissions.includes(key)
       ? selectedPermissions.filter((item) => item !== key)
       : [...selectedPermissions, key];
-    console.log({ newSelection });
     setSelectedPermissions(newSelection);
   };
 
