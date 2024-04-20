@@ -1,20 +1,17 @@
 import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, TextInput,
+  AddIcon,
+  Button,
+  List,
+  ListItem,
+  Modal,
+  TextInput,
 } from '../../components';
 import personTypeList from '../../constants/personTypeList';
+import { clientsList } from '../../constants/mocks';
 import './styles.scss';
 
 function ClientsScreen() {
-  const clientsList = [
-    {
-      id: 1, name: 'Joaozinho', personType: 'F', cpfCnpj: '01234567890',
-    },
-    {
-      id: 2, name: 'Empresa Ltda', personType: 'J', cpfCnpj: '01234567890',
-    },
-  ];
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalChildren, setModalChildren] = useState(null);
   const [clientData, setClientData] = useState({
@@ -56,7 +53,9 @@ function ClientsScreen() {
           Tipo*:
           <select type="text" name="personType" onChange={handleClientData}>
             {personTypeList.map((item) => (
-              <option key={item.id} value={item.id}>{item.value}</option>
+              <option key={item.id} value={item.id}>
+                {item.value}
+              </option>
             ))}
           </select>
         </label>
@@ -66,8 +65,16 @@ function ClientsScreen() {
           <input type="text" name="cpfCnpj" onChange={handleClientData} />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
-          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+          <Button
+            variant="primaryButton"
+            text="Cadastrar"
+            onClick={handleCloseModal}
+          />
+          <Button
+            variant="primaryButton"
+            text="Cancelar"
+            onClick={handleCloseModal}
+          />
         </div>
       </>,
     );
@@ -81,20 +88,39 @@ function ClientsScreen() {
       <>
         <label htmlFor="name">
           Nome:
-          <input type="text" name="name" readOnly value={selectedClientData.name} />
+          <input
+            type="text"
+            name="name"
+            readOnly
+            value={selectedClientData.name}
+          />
         </label>
 
         <label htmlFor="personType">
           Tipo:
-          <input type="text" name="personType" disabled value={selectedClientData.personType} />
+          <input
+            type="text"
+            name="personType"
+            disabled
+            value={selectedClientData.personType}
+          />
         </label>
 
         <label htmlFor="cpfCnpj">
           CPF/CNPJ:
-          <input type="text" name="cpfCnpj" disabled value={selectedClientData.cpfCnpj} />
+          <input
+            type="text"
+            name="cpfCnpj"
+            disabled
+            value={selectedClientData.cpfCnpj}
+          />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Sair" onClick={handleCloseModal} />
+          <Button
+            variant="primaryButton"
+            text="Sair"
+            onClick={handleCloseModal}
+          />
         </div>
       </>,
     );
@@ -108,31 +134,56 @@ function ClientsScreen() {
       <>
         <label htmlFor="name">
           Nome*:
-          <input type="text" name="name" defaultValue={selectedClientData.name} onChange={handleClientData} />
+          <input
+            type="text"
+            name="name"
+            defaultValue={selectedClientData.name}
+            onChange={handleClientData}
+          />
         </label>
 
         <label htmlFor="personType">
           Tipo*:
-          <select type="text" name="personType" defaultValue={selectedClientData.personType} onChange={handleClientData}>
+          <select
+            type="text"
+            name="personType"
+            defaultValue={selectedClientData.personType}
+            onChange={handleClientData}
+          >
             {personTypeList.map((item) => (
-              <option key={item.id} value={item.id}>{item.value}</option>
+              <option key={item.id} value={item.id}>
+                {item.value}
+              </option>
             ))}
           </select>
         </label>
 
         <label htmlFor="cpfCnpj">
           CPF/CNPJ*:
-          <input type="text" name="cpfCnpj" defaultValue={selectedClientData.cpfCnpj} onChange={handleClientData} />
+          <input
+            type="text"
+            name="cpfCnpj"
+            defaultValue={selectedClientData.cpfCnpj}
+            onChange={handleClientData}
+          />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Alterar" onClick={handleCloseModal} />
-          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+          <Button
+            variant="primaryButton"
+            text="Alterar"
+            onClick={handleCloseModal}
+          />
+          <Button
+            variant="primaryButton"
+            text="Cancelar"
+            onClick={handleCloseModal}
+          />
         </div>
       </>,
     );
   };
 
-  useEffect(() => { }, [clientData]);
+  useEffect(() => {}, [clientData]);
 
   const openDeleteClientModal = () => {
     handleOpenModal();
@@ -140,8 +191,16 @@ function ClientsScreen() {
       <>
         <h2>Deletar cliente?</h2>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
-          <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
+          <Button
+            variant="primaryButton"
+            text="Deletar"
+            onClick={handleCloseModal}
+          />
+          <Button
+            variant="primaryButton"
+            text="Cancelar"
+            onClick={handleCloseModal}
+          />
         </div>
       </>,
     );
@@ -150,7 +209,12 @@ function ClientsScreen() {
   return (
     <div className="clientsLayout">
       <div className="clientsSearchAddContainer">
-        <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" onClick={openCreateClientModal} />
+        <Button
+          variant="secondaryButton"
+          icon={<AddIcon size={24} />}
+          text="Adicionar"
+          onClick={openCreateClientModal}
+        />
         <TextInput />
       </div>
       <List containerClassName="clientsListContainer">
@@ -164,12 +228,7 @@ function ClientsScreen() {
           />
         ))}
       </List>
-      {isModalOpen
-      && (
-      <Modal onClose={handleCloseModal}>
-        {modalChildren}
-      </Modal>
-      )}
+      {isModalOpen && <Modal onClose={handleCloseModal}>{modalChildren}</Modal>}
     </div>
   );
 }
