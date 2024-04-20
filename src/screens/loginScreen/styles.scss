@@ -37,6 +37,10 @@
     gap: 24px;
     width: 100%;
 
+    .loginErrorMessage {
+      color: variables.$ERROR_COLOR;
+      font-size: variables.$FONT-SMALL;}
+
     input {
       outline: none;
       background-color: rgba(variables.$N300, 0.4);

@@ -8,24 +8,38 @@ import {
   TextInput,
 } from '../../components';
 import personTypeList from '../../constants/personTypeList';
-import { clientsList } from '../../constants/mocks';
 import './styles.scss';
+import {
+  createClient, deleteClient, getClientById, getClients, updateClient,
+} from '../../services/clientsService';
 
 function ClientsScreen() {
+  const [clientsList, setClientsList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalChildren, setModalChildren] = useState(null);
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalSeeOpen, setIsModalSeeOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [clientData, setClientData] = useState({
     name: '',
     personType: '',
     cpfCnpj: '',
   });
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  useEffect(() => {
+    getClients().then((resp) => setClientsList(resp));
+  }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
+
+  // const handleOpenModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setIsModalCreateOpen(false);
+    setIsModalSeeOpen(false);
+    setIsModalUpdateOpen(false);
+    setIsModalDeleteOpen(false);
     setClientData({
       name: '',
       personType: '',
@@ -40,9 +54,30 @@ function ClientsScreen() {
     }));
   };
 
+  const handleUpdateClient = async (event) => {
+    event.preventDefault();
+    const updatedClient = { ...clientData };
+    delete updatedClient.id;
+    await updateClient(clientData.id, updatedClient);
+    handleCloseModal();
+  };
+
+  const handleCreateClient = async (event) => {
+    event.preventDefault();
+    console.log({ clientData });
+    await createClient(clientData);
+    handleCloseModal();
+  };
+
+  const handleDeleteClient = async (event) => {
+    event.preventDefault();
+    await deleteClient(clientData.id);
+    handleCloseModal();
+  };
+
   const openCreateClientModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalCreateOpen) return null;
+    return (
       <>
         <label htmlFor="name">
           Nome*:
@@ -68,7 +103,7 @@ function ClientsScreen() {
           <Button
             variant="primaryButton"
             text="Cadastrar"
-            onClick={handleCloseModal}
+            onClick={handleCreateClient}
           />
           <Button
             variant="primaryButton"
@@ -76,15 +111,13 @@ function ClientsScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openSeeClientModal = (id) => {
-    const selectedClientData = clientsList.find((item) => item.id === id);
-    setClientData(selectedClientData);
-    handleOpenModal();
-    setModalChildren(
+  const openSeeClientModal = () => {
+    if (!clientData) return null;
+    return (
       <>
         <label htmlFor="name">
           Nome:
@@ -92,7 +125,7 @@ function ClientsScreen() {
             type="text"
             name="name"
             readOnly
-            value={selectedClientData.name}
+            value={clientData.name}
           />
         </label>
 
@@ -102,7 +135,7 @@ function ClientsScreen() {
             type="text"
             name="personType"
             disabled
-            value={selectedClientData.personType}
+            value={clientData.personType}
           />
         </label>
 
@@ -112,7 +145,7 @@ function ClientsScreen() {
             type="text"
             name="cpfCnpj"
             disabled
-            value={selectedClientData.cpfCnpj}
+            value={clientData.cpfCnpj}
           />
         </label>
         <div className="modalButtonsContainer">
@@ -122,22 +155,20 @@ function ClientsScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openUpdateClientModal = (id) => {
-    const selectedClientData = clientsList.find((item) => item.id === id);
-    setClientData(selectedClientData);
-    handleOpenModal();
-    setModalChildren(
+  const openUpdateClientModal = () => {
+    if (!clientData) return null;
+    return (
       <>
         <label htmlFor="name">
           Nome*:
           <input
             type="text"
             name="name"
-            defaultValue={selectedClientData.name}
+            defaultValue={clientData.name}
             onChange={handleClientData}
           />
         </label>
@@ -147,7 +178,7 @@ function ClientsScreen() {
           <select
             type="text"
             name="personType"
-            defaultValue={selectedClientData.personType}
+            defaultValue={clientData.personType}
             onChange={handleClientData}
           >
             {personTypeList.map((item) => (
@@ -163,7 +194,7 @@ function ClientsScreen() {
           <input
             type="text"
             name="cpfCnpj"
-            defaultValue={selectedClientData.cpfCnpj}
+            defaultValue={clientData.cpfCnpj}
             onChange={handleClientData}
           />
         </label>
@@ -171,30 +202,30 @@ function ClientsScreen() {
           <Button
             variant="primaryButton"
             text="Alterar"
-            onClick={handleCloseModal}
+            type="button"
+            onClick={handleUpdateClient}
           />
           <Button
             variant="primaryButton"
             text="Cancelar"
+            type="button"
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  useEffect(() => {}, [clientData]);
-
   const openDeleteClientModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!clientData) return null;
+    return (
       <>
         <h2>Deletar cliente?</h2>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
             text="Deletar"
-            onClick={handleCloseModal}
+            onClick={handleDeleteClient}
           />
           <Button
             variant="primaryButton"
@@ -202,7 +233,7 @@ function ClientsScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
@@ -213,7 +244,10 @@ function ClientsScreen() {
           variant="secondaryButton"
           icon={<AddIcon size={24} />}
           text="Adicionar"
-          onClick={openCreateClientModal}
+          onClick={() => {
+            setIsModalCreateOpen(true);
+            setIsModalOpen(true);
+          }}
         />
         <TextInput />
       </div>
@@ -222,13 +256,34 @@ function ClientsScreen() {
           <ListItem
             description={item.name}
             key={item.id}
-            seeAction={() => openSeeClientModal(item.id)}
-            updateAction={() => openUpdateClientModal(item.id)}
-            deleteAction={openDeleteClientModal}
+            seeAction={async () => {
+              setClientData(await getClientById(item.id));
+              setIsModalSeeOpen(true);
+              setIsModalOpen(true);
+            }}
+            updateAction={async () => {
+              setClientData(await getClientById(item.id));
+              setIsModalUpdateOpen(true);
+              setIsModalOpen(true);
+            }}
+            deleteAction={() => {
+              setClientData({ ...item });
+              setIsModalDeleteOpen(true);
+              setIsModalOpen(true);
+            }}
           />
         ))}
       </List>
-      {isModalOpen && <Modal onClose={handleCloseModal}>{modalChildren}</Modal>}
+      {isModalOpen && (
+      <Modal onClose={handleCloseModal}>
+        {
+        (isModalCreateOpen && (openCreateClientModal()))
+        || (isModalSeeOpen && (openSeeClientModal()))
+        || (isModalUpdateOpen && (openUpdateClientModal()))
+        || (isModalDeleteOpen && (openDeleteClientModal('teste')))
+      }
+      </Modal>
+      )}
     </div>
   );
 }
