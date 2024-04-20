@@ -23,6 +23,7 @@ export async function updateNature(id, data) {
     const response = await api.put(`/nature/${id}`, data, configHeader());
     return response;
   } catch (error) {
+    console.log(error.response);
     return error.response;
   }
 }
