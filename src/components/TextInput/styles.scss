@@ -52,7 +52,7 @@
 .fieldWithError {
   input {
     color: variables.$DANGER_DARK !important;
-    border-color: variables.$DANGER_LIGHT !important;
+    border-color: variables.$DANGER_DARK !important;
     &::placeholder {
       color: variables.$DANGER_DARK !important;
       opacity: 1; /* Firefox */
