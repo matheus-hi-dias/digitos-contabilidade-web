@@ -13,7 +13,13 @@
     "react/jsx-no-target-blank": "off",
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "jsx-a11y/label-has-associated-control": [ 2, {
+      "labelComponents": ["label"],
+      "htmlFor": ["label"],
+      "controlComponents": ["TextInput"],
+      "depth": 3
+    }]
     // "react-refresh/only-export-components": ["warn",{ "allowConstantExport": true }]
   }
 }

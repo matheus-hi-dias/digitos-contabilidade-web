@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import useErrors from '../../hooks/useErrors';
 import {
   AddIcon, Button, List, ListItem, Modal, SearchInput,
+  TextInput,
 } from '../../components';
 import './styles.scss';
 
@@ -53,21 +54,21 @@ function DocumentsNatureScreen() {
 
   const handleCreateNature = async (event) => {
     event.preventDefault();
-    console.log({ natureData });
+    // console.log({ natureData });
     await createNature(natureData);
     handleCloseModal();
   };
 
   const handleUpdateNature = async (event) => {
     event.preventDefault();
-    console.log({ natureData });
+    // console.log({ natureData });
     await updateNature(natureData.id, natureData);
     handleCloseModal();
   };
 
   const handleDeleteNature = async (event) => {
     event.preventDefault();
-    console.log({ natureData });
+    // console.log({ natureData });
     await deleteNature(natureData.id);
     handleCloseModal();
   };
@@ -78,7 +79,7 @@ function DocumentsNatureScreen() {
       <>
         <label htmlFor="nature">
           Natureza do documento*:
-          <input type="text" name="nature" onChange={handleNatureData} />
+          <TextInput variant="formField" type="text" name="nature" onChange={handleNatureData} />
         </label>
         <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Cadastrar" onClick={handleCreateNature} />
@@ -94,7 +95,7 @@ function DocumentsNatureScreen() {
       <>
         <label htmlFor="nature">
           Natureza do documento*:
-          <input type="text" name="nature" defaultValue={natureData.nature} onChange={handleNatureData} />
+          <TextInput variant="formField" type="text" name="nature" defaultValue={natureData.nature} onChange={handleNatureData} />
         </label>
         <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Alterar" onClick={handleUpdateNature} />
