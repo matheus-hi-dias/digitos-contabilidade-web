@@ -10,6 +10,7 @@ import ClientsScreen from './screens/clientsScreen';
 import DocumentsNatureScreen from './screens/documentsNatureScreen';
 import DocumentStorageLocalScreen from './screens/documentStorageLocalScreen';
 import UsersScreen from './screens/usersScreen';
+import RolesScreen from './screens/rolesScreen';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/natureza" element={<DocumentsNatureScreen />} />
           <Route path="/local-do-documento" element={<DocumentStorageLocalScreen />} />
           <Route path="/usuarios" element={<UsersScreen />} />
+          <Route path="/cargos" element={<RolesScreen />} />
         </Route>
       </Routes>
     </BrowserRouter>

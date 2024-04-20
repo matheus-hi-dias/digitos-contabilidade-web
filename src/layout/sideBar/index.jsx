@@ -19,6 +19,7 @@ export default function SideBar() {
       <NavLink to="/natureza" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Natureza</NavLink>
       <NavLink to="/local-do-documento" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Local do Documento</NavLink>
       <NavLink to="/usuarios" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Usuários</NavLink>
+      <NavLink to="/cargos" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Cargos</NavLink>
 
     </div>
   );
