@@ -73,7 +73,7 @@ function DocumentsNatureScreen() {
       <>
         <h2>Deletar natureza?</h2>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Deletar" onClick={handleCloseModal} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
       </>,
