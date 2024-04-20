@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, TextInput,
 } from '../../components';
@@ -14,16 +14,15 @@ function RolesScreen() {
     role: '',
   });
 
-  const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const selectedPermissionsRef = useRef([]);
 
   const handlePermissionsToggle = (key) => {
-    const newSelection = selectedPermissions.includes(key)
-      ? selectedPermissions.filter((item) => item !== key)
-      : [...selectedPermissions, key];
-    setSelectedPermissions(newSelection);
+    const newSelection = selectedPermissionsRef.current.includes(key)
+      ? selectedPermissionsRef.current.filter((item) => item !== key)
+      : [...selectedPermissionsRef.current, key];
+    selectedPermissionsRef.current = newSelection;
+    console.log(selectedPermissionsRef);
   };
-
-  useEffect(() => { console.log({ selectedPermissions }); }, [selectedPermissions]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -34,6 +33,7 @@ function RolesScreen() {
     setRoleData({
       role: '',
     });
+    selectedPermissionsRef.current = [];
   };
 
   const handleRoleData = (e) => {
@@ -59,7 +59,6 @@ function RolesScreen() {
                 <input
                   type="checkbox"
                   name={key}
-                  checked={selectedPermissions.includes(key)}
                   onChange={() => handlePermissionsToggle(key)}
                 />
                 {permissions[key]}
@@ -93,6 +92,21 @@ function RolesScreen() {
           Cargo*:
           <input type="text" name="role" disabled readOnly value={selectedRoleData.role} />
         </label>
+        <div className="permissionsContainer">
+          Permissões:
+          <List containerClassName="permissionListContainer">
+            {Object.keys(permissions).map((key) => (
+              <label key={key} htmlFor={permissions[key]}>
+                <input
+                  type="checkbox"
+                  name={key}
+                  onChange={() => handlePermissionsToggle(key)}
+                />
+                {permissions[key]}
+              </label>
+            ))}
+          </List>
+        </div>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
@@ -114,6 +128,21 @@ function RolesScreen() {
           Cargo*:
           <input type="text" name="role" defaultValue={selectedRoleData.role} onChange={handleRoleData} />
         </label>
+        <div className="permissionsContainer">
+          Permissões:
+          <List containerClassName="permissionListContainer">
+            {Object.keys(permissions).map((key) => (
+              <label key={key} htmlFor={permissions[key]}>
+                <input
+                  type="checkbox"
+                  name={key}
+                  onChange={() => handlePermissionsToggle(key)}
+                />
+                {permissions[key]}
+              </label>
+            ))}
+          </List>
+        </div>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
