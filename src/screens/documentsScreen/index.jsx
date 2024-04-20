@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, TextInput,
+  AddIcon, Button, List, ListItem, Modal, SearchInput,
 } from '../../components';
 import './styles.scss';
 
@@ -244,7 +244,7 @@ function DocumentsScreen() {
           text="Adicionar"
           onClick={openCreateDocumentModal}
         />
-        <TextInput />
+        <SearchInput />
       </div>
       <div className="documentsFilterContainer">
         <div className="documentsFilterContentDiv">

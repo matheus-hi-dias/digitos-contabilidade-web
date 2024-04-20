@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, TextInput,
+  AddIcon, Button, List, ListItem, Modal, SearchInput,
 } from '../../components';
 import permissions from '../../constants/permissions';
 import './styles.scss';
@@ -186,7 +186,7 @@ function RolesScreen() {
     <div className="usersLayout">
       <div className="usersSearchAddContainer">
         <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" onClick={openCreateRoleModal} />
-        <TextInput />
+        <SearchInput />
       </div>
       <List containerClassName="usersListContainer">
         {roleList.map((item) => (

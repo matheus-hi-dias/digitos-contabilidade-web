@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
-import { Button, FaUser } from '../../components';
+import { Button, FaUser, TextInput } from '../../components';
 import './styles.scss';
 
 function LoginScreen() {
@@ -48,14 +48,15 @@ function LoginScreen() {
         <FaUser className="loginIcon" size={136} />
         <form onSubmit={handleSubmitLogin}>
           {error && <span className="loginErrorMessage">{error}</span>}
-          <input
-            type="text"
+          <TextInput
+            variant="formField"
+            placeholder="Usuário ou e-mail"
             name="login"
             id="login"
-            placeholder="Usuário ou e-mail"
             onChange={handleLoginChange}
           />
-          <input
+          <TextInput
+            variant="formField"
             type="password"
             name="password"
             id="password"

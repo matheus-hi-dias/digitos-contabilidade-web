@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import useErrors from '../../hooks/useErrors';
 import {
-  AddIcon, Button, List, ListItem, Modal, TextInput,
+  AddIcon, Button, List, ListItem, Modal, SearchInput,
 } from '../../components';
 import './styles.scss';
 
@@ -17,6 +18,10 @@ function DocumentsNatureScreen() {
   const [natureData, setNatureData] = useState({
     nature: '',
   });
+
+  const {
+    setErrors,
+  } = useErrors();
 
   useEffect(() => {
     getNatures().then((resp) => setDocumentNatureList(resp));
@@ -36,11 +41,14 @@ function DocumentsNatureScreen() {
     });
   };
 
-  const handleNatureData = (e) => {
+  const handleNatureData = (event) => {
     setNatureData((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     }));
+    if (event.target.name === 'nature' && !event.target.value) {
+      setErrors({ field: event.target.name, error: 'Natureza é um campo obrigatório' });
+    }
   };
 
   const handleCreateNature = async (event) => {
@@ -123,7 +131,7 @@ function DocumentsNatureScreen() {
             handleOpenModal();
           }}
         />
-        <TextInput />
+        <SearchInput />
       </div>
       <List containerClassName="documentNatureListContainer">
         {documentNatureList.map((item) => (

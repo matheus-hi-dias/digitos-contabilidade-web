@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, TextInput,
+  AddIcon, Button, List, ListItem, Modal, SearchInput,
 } from '../../components';
 import './styles.scss';
 
@@ -191,7 +191,7 @@ function UsersScreen() {
     <div className="usersLayout">
       <div className="usersSearchAddContainer">
         <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" onClick={openCreateUserModal} />
-        <TextInput />
+        <SearchInput />
       </div>
       <List containerClassName="usersListContainer">
         {userList.map((item) => (

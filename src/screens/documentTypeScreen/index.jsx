@@ -6,7 +6,7 @@ import {
   List,
   ListItem,
   Modal,
-  TextInput,
+  SearchInput,
 } from '../../components';
 import './styles.scss';
 import { documentTypeList } from '../../constants/mocks';
@@ -151,7 +151,7 @@ function DocumentTypeScreen() {
           text="Adicionar"
           onClick={openCreateDocumentTypeModal}
         />
-        <TextInput />
+        <SearchInput />
       </div>
       <List containerClassName="documentTypeListContainer">
         {documentTypeList.map((item) => (

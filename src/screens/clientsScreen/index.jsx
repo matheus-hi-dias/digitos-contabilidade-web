@@ -5,7 +5,7 @@ import {
   List,
   ListItem,
   Modal,
-  TextInput,
+  SearchInput,
 } from '../../components';
 import personTypeList from '../../constants/personTypeList';
 import './styles.scss';
@@ -249,7 +249,7 @@ function ClientsScreen() {
             setIsModalOpen(true);
           }}
         />
-        <TextInput />
+        <SearchInput />
       </div>
       <List containerClassName="clientsListContainer">
         {clientsList.map((item) => (

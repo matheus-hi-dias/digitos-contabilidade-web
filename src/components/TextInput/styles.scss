@@ -1,6 +1,6 @@
 @use '../../styles/variables';
 .inputSearchContainer {
-  
+
   height: 42px;
   position: relative;
 
@@ -9,15 +9,62 @@
     width: 100%;
     padding: 0 32px 0 8px;
     background-color: variables.$N300;
-    
+
     border: none;
     border-radius: 8px;
   }
-  
+
   .inputSearchIcon {
     position: absolute;
     font-size: 24px;
     right: 8px;
     top: 9px;
   }
+}
+
+.formFieldContainer {
+  width: 100%;
+  height: 45px;
+  input {
+
+    outline: none;
+    background-color: rgba(variables.$N300, 0.4);
+    color: variables.$N200;
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 11px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 4px rgba(variables.$N200, 0.25);
+
+    &::placeholder {
+      color: variables.$N000;
+      opacity: 1; /* Firefox */
+    }
+
+    &::-ms-input-placeholder {
+      /* Edge 12 -18 */
+      color: variables.$N200;
+    }
+  }
+}
+
+.fieldWithError {
+  input {
+    color: variables.$DANGER_DARK !important;
+    border-color: variables.$DANGER_LIGHT !important;
+    &::placeholder {
+      color: variables.$DANGER_DARK !important;
+      opacity: 1; /* Firefox */
+    }
+
+    &::-ms-input-placeholder {
+      /* Edge 12 -18 */
+      color: variables.$DANGER_DARK !important;
+    }
+  }
+}
+.errorMessage {
+  color: variables.$DANGER_DARK;
+  font-size: variables.$FONT-XSMALL;
 }

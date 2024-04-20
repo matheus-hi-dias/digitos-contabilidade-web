@@ -1,12 +1,23 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { BiSearch } from '../Icons';
 import './styles.scss';
 
-function TextInput() {
+function TextInput({
+  variant, placeholder, customClass, icon, error, errorMessage, type = 'text', ...rest
+}) {
+  const styleClass = {
+    search: 'inputSearchContainer',
+    formField: 'formFieldContainer',
+  };
   return (
-    <div className="inputSearchContainer">
-      <input type="text" placeholder="Pesquisar..." className="inputSearch" data-testid="search-input" />
-      <BiSearch className="inputSearchIcon" data-testid="search-icon" />
+    <div className={`${styleClass[variant]} ${customClass || ''} ${error && 'fieldWithError'}`}>
+      <input type={type} placeholder={placeholder} className="inputSearch" data-testid="search-input" {...rest} />
+      {icon && icon}
+      {error && (
+        <span className="errorMessage">
+          {errorMessage}
+        </span>
+      )}
     </div>
   );
 }
