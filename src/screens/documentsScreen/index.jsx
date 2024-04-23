@@ -6,7 +6,7 @@ import {
 import './styles.scss';
 
 import { formatDate, setEmptyValues } from '../../utils';
-import { getDocuments, getDocumentByCode } from '../../services/documents';
+import { getDocuments, getDocumentByCode, createDocument } from '../../services/documents';
 import { getDocumentTypes } from '../../services/documentsType';
 import { getClients } from '../../services/clientsService';
 import { getNatures } from '../../services/documentsNature';
@@ -93,6 +93,12 @@ function DocumentsScreen() {
     }));
   };
 
+  const handleCreateDocument = async (event) => {
+    event.preventDefault();
+    await createDocument(documentData);
+    handleCloseModal();
+  };
+
   const openCreateDocumentModal = () => {
     if (!isModalCreateOpen) return null;
     return (
@@ -125,7 +131,7 @@ function DocumentsScreen() {
           <Select type="text" name="location_id" onChange={handleDocumentData} options={setEmptyValues(documentLocalList)} optionKey="id" optionLabels={['doc_location']} />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleCreateDocument} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
       </>
