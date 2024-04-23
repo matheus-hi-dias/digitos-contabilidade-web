@@ -1,0 +1,16 @@
+@use '../../styles/variables';
+
+select {
+  background-color: rgba(variables.$N300, 0.4);
+  border: none;
+  box-shadow: 0px 4px 4px rgba(variables.$N900, 0.25);
+  outline: none;
+  border-radius: 8px;
+  color: variables.$N000;
+  padding: 8px;
+  height: 45px;
+
+  option {
+    color: variables.$N1000;
+  }
+}

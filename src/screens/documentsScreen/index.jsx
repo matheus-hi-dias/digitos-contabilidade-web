@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, SearchInput,
+  TextInput,
 } from '../../components';
 import './styles.scss';
 
-import {
-  documentTypeList, clientsList, documentNatureList,
-  documentLocalList,
-} from '../../constants/mocks';
-import { formatDate } from '../../utils/formatDate';
+import { formatDate, setEmptyValues } from '../../utils';
 import { getDocuments, getDocumentByCode } from '../../services/documents';
+import { getDocumentTypes } from '../../services/documentsType';
+import { getClients } from '../../services/clientsService';
+import { getNatures } from '../../services/documentsNature';
+import { getDocumentStorageLocal } from '../../services/documentsStorageLocal';
+import Select from '../../components/Select/Select';
 
 function DocumentsScreen() {
   const [documentsList, setDocumentsList] = useState([]);
+  const [documentsTypesList, setDocumentsTypesList] = useState([]);
+  const [clientsList, setClientsList] = useState([]);
+  const [documentNatureList, setDocumentNatureList] = useState([]);
+  const [documentLocalList, setDocumentLocalList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
   const [isModalSeeOpen, setIsModalSeeOpen] = useState(false);
@@ -50,7 +56,16 @@ function DocumentsScreen() {
   };
 
   useEffect(() => {
-    getDocuments().then(setDocumentsList);
+    getDocumentTypes().then(setDocumentsTypesList);
+    getClients().then(setClientsList);
+    getNatures().then(setDocumentNatureList);
+    getDocumentStorageLocal().then(setDocumentLocalList);
+  }, []);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      getDocuments().then(setDocumentsList);
+    }
   }, [isModalCreateOpen, isModalDeleteOpen, isModalUpdateOpen]);
 
   const handleCloseModal = () => {
@@ -79,49 +94,35 @@ function DocumentsScreen() {
   };
 
   const openCreateDocumentModal = () => {
-    console.log('create modal');
     if (!isModalCreateOpen) return null;
     return (
       <>
         <label htmlFor="document_code">
           Código*:
-          <input type="text" name="document_code" onChange={handleDocumentData} />
+          <TextInput variant="formField" type="text" name="document_code" onChange={handleDocumentData} />
         </label>
         <label htmlFor="name">
           Nome*:
-          <input type="text" name="name" onChange={handleDocumentData} />
+          <TextInput variant="formField" type="text" name="name" onChange={handleDocumentData} />
         </label>
+
         <label htmlFor="doc_type_id">
           Tipo*:
-          <select type="text" name="doc_type_id" onChange={handleDocumentData}>
-            {documentTypeList.map((item) => (
-              <option key={item.id} value={item.id}>{item.doc_type}</option>
-            ))}
-          </select>
+          <Select type="text" name="doc_type_id" onChange={handleDocumentData} options={setEmptyValues(documentsTypesList)} optionKey="id" optionLabels={['doc_type']} />
         </label>
         <label htmlFor="client_id">
           Cliente*:
-          <select type="text" name="client_id" onChange={handleDocumentData}>
-            {clientsList.map((item) => (
-              <option key={item.id} value={item.id}>{item.name.concat(` (${item.cpfCnpj})`)}</option>
-            ))}
-          </select>
+          <Select type="text" name="client_id" onChange={handleDocumentData} options={setEmptyValues(clientsList)} optionKey="id" optionLabels={['name', 'cpfCnpj']} />
+
         </label>
         <label htmlFor="nature_id">
           Natureza*:
-          <select type="text" name="nature_id" onChange={handleDocumentData}>
-            {documentNatureList.map((item) => (
-              <option key={item.id} value={item.id}>{item.nature}</option>
-            ))}
-          </select>
+          <Select type="text" name="nature_id" onChange={handleDocumentData} options={setEmptyValues(documentNatureList)} optionKey="id" optionLabels={['nature']} />
+
         </label>
         <label htmlFor="location_id">
           Local/caminho*:
-          <select type="text" name="location_id" onChange={handleDocumentData}>
-            {documentLocalList.map((item) => (
-              <option key={item.id} value={item.id}>{item.doc_location}</option>
-            ))}
-          </select>
+          <Select type="text" name="location_id" onChange={handleDocumentData} options={setEmptyValues(documentLocalList)} optionKey="id" optionLabels={['doc_location']} />
         </label>
         <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
@@ -191,7 +192,7 @@ function DocumentsScreen() {
         <label htmlFor="doc_type_id">
           Tipo*:
           <select type="text" name="doc_type_id" defaultValue={documentData.doc_type_id} onChange={handleDocumentData}>
-            {documentTypeList.map((item) => (
+            {documentsTypesList.map((item) => (
               <option key={item.id} value={item.id}>{item.doc_type}</option>
             ))}
           </select>
@@ -262,7 +263,7 @@ function DocumentsScreen() {
         <div className="documentsFilterContentDiv">
           <div>Tipo de documento</div>
           <List>
-            {documentTypeList.map((item) => (
+            {documentsTypesList.map((item) => (
               <label key={item.id} htmlFor={item.id}>
                 <input
                   type="checkbox"
