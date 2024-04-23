@@ -12,15 +12,15 @@ export async function getNatureById(id) {
 
 export async function updateNature(id, data) {
   const response = await api.put(`/nature/${id}`, data, configHeader());
-  return response;
+  return response.data;
 }
 
 export async function createNature(data) {
   const response = await api.post('/nature', data, configHeader());
-  return response;
+  return response.data;
 }
 
 export async function deleteNature(id) {
   const response = await api.delete(`/nature/${id}`, configHeader());
-  return response;
+  return response.data;
 }
