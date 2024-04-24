@@ -6,7 +6,10 @@ import {
 import './styles.scss';
 
 import { formatDate, setEmptyValues } from '../../utils';
-import { getDocuments, getDocumentByCode, createDocument } from '../../services/documents';
+import {
+  getDocuments, getDocumentByCode, createDocument, updateDocument,
+  deleteDocument,
+} from '../../services/documents';
 import { getDocumentTypes } from '../../services/documentsType';
 import { getClients } from '../../services/clientsService';
 import { getNatures } from '../../services/documentsNature';
@@ -99,6 +102,18 @@ function DocumentsScreen() {
     handleCloseModal();
   };
 
+  const handleUpdateDocument = async (event) => {
+    event.preventDefault();
+    await updateDocument(documentData.document_code, documentData);
+    handleCloseModal();
+  };
+
+  const handleDeleteDocument = async (event) => {
+    event.preventDefault();
+    await deleteDocument(documentData.document_code);
+    handleCloseModal();
+  };
+
   const openCreateDocumentModal = () => {
     if (!isModalCreateOpen) return null;
     return (
@@ -145,35 +160,35 @@ function DocumentsScreen() {
       <>
         <label htmlFor="document_code">
           Código:
-          <input type="text" disabled name="document_code" value={documentData.document_code} />
+          <TextInput variant="formField" type="text" disabled name="document_code" value={documentData.document_code} />
         </label>
         <label htmlFor="name">
           Nome:
-          <input type="text" disabled name="name" value={documentData.name} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentData.name} />
         </label>
         <label htmlFor="name">
           Tipo:
-          <input type="text" disabled name="name" value={documentData.document_type.doc_type} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentData.document_type.doc_type} />
         </label>
         <label htmlFor="name">
           Cliente:
-          <input type="text" disabled name="name" value={documentData.client.name} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentData.client.name} />
         </label>
         <label htmlFor="name">
           Natureza:
-          <input type="text" disabled name="name" value={documentData.document_nature.nature} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentData.document_nature.nature} />
         </label>
         <label htmlFor="name">
           Local/caminho:
-          <input type="text" disabled name="name" value={documentData.document_location.doc_location} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentData.document_location.doc_location} />
         </label>
         <label htmlFor="name">
           Data cadastro:
-          <input type="date" disabled name="name" value={formatDate(documentData.archiving_date)} />
+          <TextInput variant="formField" type="date" disabled name="name" value={formatDate(documentData.archiving_date)} />
         </label>
         <label htmlFor="name">
           Data vencimento:
-          <input type="date" disabled name="name" value={formatDate(documentData.archiving_date)} />
+          <TextInput variant="formField" type="date" disabled name="name" value={formatDate(documentData.archiving_date)} />
         </label>
         <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Sair" onClick={handleCloseModal} />
@@ -189,46 +204,30 @@ function DocumentsScreen() {
       <>
         <label htmlFor="document_code">
           Código*:
-          <input type="text" name="document_code" disabled readOnly defaultValue={documentData.document_code} onChange={handleDocumentData} />
+          <TextInput variant="formField" type="text" name="document_code" disabled readOnly defaultValue={documentData.document_code} onChange={handleDocumentData} />
         </label>
         <label htmlFor="name">
           Nome*:
-          <input type="text" name="name" defaultValue={documentData.name} onChange={handleDocumentData} />
+          <TextInput variant="formField" type="text" name="name" defaultValue={documentData.name} onChange={handleDocumentData} />
         </label>
         <label htmlFor="doc_type_id">
           Tipo*:
-          <select type="text" name="doc_type_id" defaultValue={documentData.doc_type_id} onChange={handleDocumentData}>
-            {documentsTypesList.map((item) => (
-              <option key={item.id} value={item.id}>{item.doc_type}</option>
-            ))}
-          </select>
+          <Select type="text" name="doc_type_id" onChange={handleDocumentData} options={setEmptyValues(documentsTypesList)} optionKey="id" optionLabels={['doc_type']} defaultValue={documentData.document_type.id} />
         </label>
         <label htmlFor="client_id">
           Cliente*:
-          <select type="text" name="client_id" defaultValue={documentData.client_id} onChange={handleDocumentData}>
-            {clientsList.map((item) => (
-              <option key={item.id} value={item.id}>{item.name.concat(` (${item.cpfCnpj})`)}</option>
-            ))}
-          </select>
+          <Select type="text" name="client_id" onChange={handleDocumentData} options={setEmptyValues(clientsList)} optionKey="id" optionLabels={['name', 'cpfCnpj']} defaultValue={documentData.client.id} />
         </label>
         <label htmlFor="nature_id">
           Natureza*:
-          <select type="text" name="nature_id" defaultValue={documentData.nature_id} onChange={handleDocumentData}>
-            {documentNatureList.map((item) => (
-              <option key={item.id} value={item.id}>{item.nature}</option>
-            ))}
-          </select>
+          <Select type="text" name="nature_id" onChange={handleDocumentData} options={setEmptyValues(documentNatureList)} optionKey="id" optionLabels={['nature']} defaultValue={documentData.document_nature.id} />
         </label>
         <label htmlFor="location_id">
           Local/caminho*:
-          <select type="text" name="location_id" defaultValue={documentData.location_id} onChange={handleDocumentData}>
-            {documentLocalList.map((item) => (
-              <option key={item.id} value={item.id}>{item.doc_location}</option>
-            ))}
-          </select>
+          <Select type="text" name="location_id" onChange={handleDocumentData} options={setEmptyValues(documentLocalList)} optionKey="id" optionLabels={['doc_location']} defaultValue={documentData.document_location.id} />
         </label>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Cadastrar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Cadastrar" onClick={handleUpdateDocument} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
       </>
@@ -244,7 +243,7 @@ function DocumentsScreen() {
       <>
         <h2>Deletar documento?</h2>
         <div className="modalButtonsContainer">
-          <Button variant="primaryButton" text="Deletar" onClick={handleCloseModal} />
+          <Button variant="primaryButton" text="Deletar" onClick={handleDeleteDocument} />
           <Button variant="primaryButton" text="Cancelar" onClick={handleCloseModal} />
         </div>
       </>

@@ -13,6 +13,7 @@ export async function getDocumentByCode(documentCode) {
 
 export async function updateDocument(documentCode, data) {
   const response = await api.put(`/documents/${documentCode}`, data, configHeader());
+  console.log({ response });
   return response.data;
 }
 
