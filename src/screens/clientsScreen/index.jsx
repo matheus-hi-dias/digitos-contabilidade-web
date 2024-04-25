@@ -6,6 +6,7 @@ import {
   ListItem,
   Modal,
   SearchInput,
+  Select,
   TextInput,
 } from '../../components';
 import personTypeList from '../../constants/personTypeList';
@@ -87,18 +88,12 @@ function ClientsScreen() {
 
         <label htmlFor="personType">
           Tipo*:
-          <select name="personType" onChange={handleClientData}>
-            {personTypeList.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.value}
-              </option>
-            ))}
-          </select>
+          <Select name="personType" onChange={handleClientData} options={personTypeList} optionKey="id" optionLabels={['value']} />
         </label>
 
         <label htmlFor="cpfCnpj">
           CPF/CNPJ*:
-          <TextInput variant="formField " name="cpfCnpj" onChange={handleClientData} />
+          <TextInput variant="formField" name="cpfCnpj" onChange={handleClientData} />
         </label>
         <div className="modalButtonsContainer">
           <Button
@@ -133,7 +128,8 @@ function ClientsScreen() {
 
         <label htmlFor="personType">
           Tipo:
-          <input
+          <TextInput
+            variant="formField"
             type="text"
             name="personType"
             disabled
@@ -179,18 +175,7 @@ function ClientsScreen() {
 
         <label htmlFor="personType">
           Tipo*:
-          <select
-            type="text"
-            name="personType"
-            defaultValue={clientData.personType}
-            onChange={handleClientData}
-          >
-            {personTypeList.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.value}
-              </option>
-            ))}
-          </select>
+          <Select name="personType" onChange={handleClientData} options={personTypeList} optionKey="id" optionLabels={['value']} defaultValue={clientData.personType} />
         </label>
 
         <label htmlFor="cpfCnpj">

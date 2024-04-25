@@ -10,6 +10,7 @@ export {
 } from './ListItem';
 export { default as Modal } from './Modal';
 export { default as SearchInput } from './SearchInput';
+export { default as Select } from './Select';
 export {
   default as TextInput,
 } from './TextInput';

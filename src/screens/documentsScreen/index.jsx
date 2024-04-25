@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, SearchInput,
+  AddIcon, Button, List, ListItem, Modal, SearchInput, Select,
   TextInput,
 } from '../../components';
 import './styles.scss';
@@ -14,7 +14,6 @@ import { getDocumentTypes } from '../../services/documentsType';
 import { getClients } from '../../services/clientsService';
 import { getNatures } from '../../services/documentsNature';
 import { getDocumentStorageLocal } from '../../services/documentsStorageLocal';
-import Select from '../../components/Select/Select';
 
 function DocumentsScreen() {
   const [documentsList, setDocumentsList] = useState([]);
