@@ -104,7 +104,14 @@ function DocumentsScreen() {
 
   const handleUpdateDocument = async (event) => {
     event.preventDefault();
-    await updateDocument(documentData.document_code, documentData);
+    const updatedData = {
+      name: documentData.name,
+      nature_id: documentData.document_nature.id,
+      location_id: documentData.document_location.id,
+      doc_type_id: documentData.document_type.id,
+      client_id: documentData.client.id,
+    };
+    await updateDocument(documentData.document_code, updatedData);
     handleCloseModal();
   };
 
@@ -154,7 +161,6 @@ function DocumentsScreen() {
   };
 
   const openSeeDocumentModal = () => {
-    console.log('see modal');
     if (!isModalSeeOpen) return null;
     return (
       <>
@@ -198,7 +204,6 @@ function DocumentsScreen() {
   };
 
   const openUpdateDocumentModal = () => {
-    console.log('update modal');
     if (!isModalUpdateOpen) return null;
     return (
       <>
@@ -234,10 +239,7 @@ function DocumentsScreen() {
     );
   };
 
-  useEffect(() => { console.log(documentData); }, [documentData]);
-
   const openDeleteDocumentModal = () => {
-    console.log('delete modal');
     if (!isModalDeleteOpen) return null;
     return (
       <>
