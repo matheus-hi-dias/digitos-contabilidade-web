@@ -1,21 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, SearchInput,
+  TextInput,
 } from '../../components';
 import permissions from '../../constants/permissions';
 import './styles.scss';
 
-import { roleList } from '../../constants/mocks';
+import { createRole, getRoleById, getRoles } from '../../services/roles';
+import getPermissions from '../../services/permissions';
+import { createRolePermission } from '../../services/rolesPermission';
 
 function RolesScreen() {
+  const [roleList, setRoleList] = useState([]);
+  const [permissionList, setPermissionList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalChildren, setModalChildren] = useState(null);
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalSeeOpen, setIsModalSeeOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [roleData, setRoleData] = useState({
-    role: '',
   });
 
   const selectedPermissionsRef = useRef([]);
 
+  useEffect(() => {
+    getPermissions().then(setPermissionList);
+  }, []);
+
+  useEffect(() => {
+    getRoles().then(setRoleList);
+  }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
   const handlePermissionsToggle = (key) => {
     const newSelection = selectedPermissionsRef.current.includes(key)
       ? selectedPermissionsRef.current.filter((item) => item !== key)
@@ -24,14 +38,13 @@ function RolesScreen() {
     console.log(selectedPermissionsRef);
   };
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  // const handleOpenModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setRoleData({
-      role: '',
     });
     selectedPermissionsRef.current = [];
   };
@@ -43,25 +56,46 @@ function RolesScreen() {
     }));
   };
 
+  const handleCreateRole = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      role: roleData.role,
+    };
+    const newRole = await createRole(data);
+
+    if (selectedPermissionsRef.current.length > 0) {
+      selectedPermissionsRef.current.forEach(async (item) => {
+        const result = await createRolePermission({
+          permission_id: item,
+          role_id: newRole.id,
+        });
+        console.log({ result });
+      });
+    }
+
+    handleCloseModal();
+  };
+
   const openCreateRoleModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalCreateOpen) return null;
+    return (
       <>
         <label htmlFor="role">
           Cargo*:
-          <input type="text" name="role" onChange={handleRoleData} />
+          <TextInput variant="formField" type="text" name="role" onChange={handleRoleData} />
         </label>
         <div className="permissionsContainer">
           Permissões:
           <List containerClassName="permissionListContainer">
-            {Object.keys(permissions).map((key) => (
-              <label key={key} htmlFor={permissions[key]}>
+            {permissionList.map((value) => (
+              <label key={value.id} htmlFor={value.permission}>
                 <input
                   type="checkbox"
-                  name={key}
-                  onChange={() => handlePermissionsToggle(key)}
+                  name={value.permission}
+                  onChange={() => handlePermissionsToggle(value.id)}
                 />
-                {permissions[key]}
+                {permissions[value.permission]}
               </label>
             ))}
           </List>
@@ -70,7 +104,7 @@ function RolesScreen() {
           <Button
             variant="primaryButton"
             text="Cadastrar"
-            onClick={handleCloseModal}
+            onClick={handleCreateRole}
           />
           <Button
             variant="primaryButton"
@@ -78,19 +112,17 @@ function RolesScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openSeeRoleModal = (id) => {
-    const selectedRoleData = roleList.find((item) => item.id === id);
-    setRoleData(selectedRoleData);
-    handleOpenModal();
-    setModalChildren(
+  const openSeeRoleModal = () => {
+    if (!isModalSeeOpen) return null;
+    return (
       <>
         <label htmlFor="role">
           Cargo*:
-          <input type="text" name="role" disabled readOnly value={selectedRoleData.role} />
+          <TextInput variant="formField" type="text" name="role" disabled readOnly value={roleData.role} />
         </label>
         <div className="permissionsContainer">
           Permissões:
@@ -114,31 +146,29 @@ function RolesScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openUpdateRoleModal = (id) => {
-    const selectedRoleData = roleList.find((item) => item.id === id);
-    setRoleData(selectedRoleData);
-    handleOpenModal();
-    setModalChildren(
+  const openUpdateRoleModal = () => {
+    if (!isModalUpdateOpen) return null;
+    return (
       <>
         <label htmlFor="role">
           Cargo*:
-          <input type="text" name="role" defaultValue={selectedRoleData.role} onChange={handleRoleData} />
+          <TextInput variant="formField" type="text" name="role" defaultValue={roleData.role} onChange={handleRoleData} />
         </label>
         <div className="permissionsContainer">
           Permissões:
           <List containerClassName="permissionListContainer">
-            {Object.keys(permissions).map((key) => (
-              <label key={key} htmlFor={permissions[key]}>
+            {Object.keys(permissions).map((value) => (
+              <label key={value} htmlFor={permissions[value]}>
                 <input
                   type="checkbox"
-                  name={key}
-                  onChange={() => handlePermissionsToggle(key)}
+                  name={value}
+                  onChange={() => handlePermissionsToggle(value)}
                 />
-                {permissions[key]}
+                {permissions[value]}
               </label>
             ))}
           </List>
@@ -155,15 +185,15 @@ function RolesScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
   useEffect(() => {}, [roleData]);
 
   const openDeleteRoleModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalDeleteOpen) return null;
+    return (
       <>
         <h2>Deletar usuário?</h2>
         <div className="modalButtonsContainer">
@@ -178,14 +208,22 @@ function RolesScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
   return (
     <div className="usersLayout">
       <div className="usersSearchAddContainer">
-        <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" onClick={openCreateRoleModal} />
+        <Button
+          variant="secondaryButton"
+          icon={<AddIcon size={24} />}
+          text="Adicionar"
+          onClick={() => {
+            setIsModalCreateOpen(true);
+            setIsModalOpen(true);
+          }}
+        />
         <SearchInput />
       </div>
       <List containerClassName="usersListContainer">
@@ -193,13 +231,34 @@ function RolesScreen() {
           <ListItem
             description={item.role}
             key={item.id}
-            seeAction={() => openSeeRoleModal(item.id)}
-            updateAction={() => openUpdateRoleModal(item.id)}
-            deleteAction={() => openDeleteRoleModal(item.id)}
+            seeAction={async () => {
+              setRoleData(await getRoleById(item.id));
+              setIsModalSeeOpen(true);
+              setIsModalOpen(true);
+            }}
+            updateAction={async () => {
+              setRoleData(await getRoleById(item.id));
+              setIsModalUpdateOpen(true);
+              setIsModalOpen(true);
+            }}
+            deleteAction={async () => {
+              setRoleData(await getRoleById(item.id));
+              setIsModalDeleteOpen(true);
+              setIsModalOpen(true);
+            }}
           />
         ))}
       </List>
-      {isModalOpen && <Modal onClose={handleCloseModal}>{modalChildren}</Modal>}
+      {isModalOpen && (
+      <Modal onClose={handleCloseModal}>
+        {
+        (isModalCreateOpen && (openCreateRoleModal()))
+        || (isModalSeeOpen && (openSeeRoleModal()))
+        || (isModalUpdateOpen && (openUpdateRoleModal()))
+        || (isModalDeleteOpen && (openDeleteRoleModal()))
+      }
+      </Modal>
+      )}
     </div>
   );
 }
