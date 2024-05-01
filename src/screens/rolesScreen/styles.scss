@@ -1,6 +1,6 @@
 @use "../../styles/variables";
 
-.usersLayout {
+.rolesLayout {
   width: 100%;
   height: 100vh;
   background-color: variables.$PRIMARY_COLOR;
@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: 5%;
-  .usersSearchAddContainer {
+  .rolesSearchAddContainer {
     height: fit-content;
     width: 90%;
     display: flex;
@@ -17,7 +17,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  .usersListContainer {
+  .rolesListContainer {
     width: 90%;
     height: 80%;
     background-color: variables.$N300;

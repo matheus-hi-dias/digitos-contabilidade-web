@@ -246,8 +246,8 @@ function RolesScreen() {
   };
 
   return (
-    <div className="usersLayout">
-      <div className="usersSearchAddContainer">
+    <div className="rolesLayout">
+      <div className="rolesSearchAddContainer">
         <Button
           variant="secondaryButton"
           icon={<AddIcon size={24} />}
@@ -259,7 +259,7 @@ function RolesScreen() {
         />
         <SearchInput />
       </div>
-      <List containerClassName="usersListContainer">
+      <List containerClassName="rolesListContainer">
         {roleList.map((item) => (
           <ListItem
             description={item.role}
