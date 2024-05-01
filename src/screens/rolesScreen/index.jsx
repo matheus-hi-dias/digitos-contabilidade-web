@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, SearchInput,
   TextInput,
@@ -6,9 +6,12 @@ import {
 import permissions from '../../constants/permissions';
 import './styles.scss';
 
-import { createRole, getRoleById, getRoles } from '../../services/roles';
+import {
+  createRole, deleteRole, getRoleById, getRoles,
+  updateRole,
+} from '../../services/roles';
 import getPermissions from '../../services/permissions';
-import { createRolePermission } from '../../services/rolesPermission';
+import { getPermissionByRoleId } from '../../services/rolesPermission';
 
 function RolesScreen() {
   const [roleList, setRoleList] = useState([]);
@@ -18,10 +21,9 @@ function RolesScreen() {
   const [isModalSeeOpen, setIsModalSeeOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
-  const [roleData, setRoleData] = useState({
-  });
+  const [roleData, setRoleData] = useState({});
 
-  const selectedPermissionsRef = useRef([]);
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
   useEffect(() => {
     getPermissions().then(setPermissionList);
@@ -30,12 +32,28 @@ function RolesScreen() {
   useEffect(() => {
     getRoles().then(setRoleList);
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
+
   const handlePermissionsToggle = (key) => {
-    const newSelection = selectedPermissionsRef.current.includes(key)
-      ? selectedPermissionsRef.current.filter((item) => item !== key)
-      : [...selectedPermissionsRef.current, key];
-    selectedPermissionsRef.current = newSelection;
-    console.log(selectedPermissionsRef);
+    const newSelection = selectedPermissions.includes(key)
+      ? selectedPermissions.filter((item) => item !== key)
+      : [...selectedPermissions, key];
+    setSelectedPermissions(newSelection);
+  };
+
+  const verifyChecked = (key) => {
+    if (typeof selectedPermissions[0] === 'number') {
+      return selectedPermissions.includes(key);
+    }
+
+    if (typeof selectedPermissions[0] === 'object') {
+      return selectedPermissions.some((item) => item.id === key);
+    }
+  };
+
+  const formatSelectedPermissionsResponse = async (roleId) => {
+    const response = await getPermissionByRoleId(roleId);
+    const permissionsId = response.map((item) => item.id);
+    setSelectedPermissions(permissionsId);
   };
 
   // const handleOpenModal = () => {
@@ -44,9 +62,12 @@ function RolesScreen() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setRoleData({
-    });
-    selectedPermissionsRef.current = [];
+    setIsModalCreateOpen(false);
+    setIsModalSeeOpen(false);
+    setIsModalUpdateOpen(false);
+    setIsModalDeleteOpen(false);
+    setRoleData({});
+    setSelectedPermissions([]);
   };
 
   const handleRoleData = (e) => {
@@ -60,20 +81,30 @@ function RolesScreen() {
     event.preventDefault();
 
     const data = {
-      role: roleData.role,
+      ...roleData,
+      permissions: selectedPermissions,
     };
-    const newRole = await createRole(data);
 
-    if (selectedPermissionsRef.current.length > 0) {
-      selectedPermissionsRef.current.forEach(async (item) => {
-        const result = await createRolePermission({
-          permission_id: item,
-          role_id: newRole.id,
-        });
-        console.log({ result });
-      });
-    }
+    await createRole(data);
 
+    handleCloseModal();
+  };
+
+  const handleUpdateRole = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      ...roleData,
+      permissions: selectedPermissions,
+    };
+    await updateRole(data.id, data);
+
+    handleCloseModal();
+  };
+
+  const handleDeleteRole = async (event) => {
+    event.preventDefault();
+    await deleteRole(roleData.id);
     handleCloseModal();
   };
 
@@ -93,6 +124,7 @@ function RolesScreen() {
                 <input
                   type="checkbox"
                   name={value.permission}
+                  checked={verifyChecked(value.id)}
                   onChange={() => handlePermissionsToggle(value.id)}
                 />
                 {permissions[value.permission]}
@@ -117,7 +149,7 @@ function RolesScreen() {
   };
 
   const openSeeRoleModal = () => {
-    if (!isModalSeeOpen) return null;
+    if (!isModalSeeOpen && selectedPermissions.length === 0) return null;
     return (
       <>
         <label htmlFor="role">
@@ -127,14 +159,16 @@ function RolesScreen() {
         <div className="permissionsContainer">
           Permissões:
           <List containerClassName="permissionListContainer">
-            {Object.keys(permissions).map((key) => (
-              <label key={key} htmlFor={permissions[key]}>
+            {permissionList.map((value) => (
+              <label key={value.id} htmlFor={value.permission}>
                 <input
                   type="checkbox"
-                  name={key}
-                  onChange={() => handlePermissionsToggle(key)}
+                  name={value.permission}
+                  checked={verifyChecked(value.id)}
+                  disabled
+                  readOnly
                 />
-                {permissions[key]}
+                {permissions[value.permission]}
               </label>
             ))}
           </List>
@@ -161,14 +195,15 @@ function RolesScreen() {
         <div className="permissionsContainer">
           Permissões:
           <List containerClassName="permissionListContainer">
-            {Object.keys(permissions).map((value) => (
-              <label key={value} htmlFor={permissions[value]}>
+            {permissionList.map((value) => (
+              <label key={value.id} htmlFor={value.permission}>
                 <input
                   type="checkbox"
-                  name={value}
-                  onChange={() => handlePermissionsToggle(value)}
+                  name={value.permission}
+                  checked={verifyChecked(value.id)}
+                  onChange={() => handlePermissionsToggle(value.id)}
                 />
-                {permissions[value]}
+                {permissions[value.permission]}
               </label>
             ))}
           </List>
@@ -177,7 +212,7 @@ function RolesScreen() {
           <Button
             variant="primaryButton"
             text="Alterar"
-            onClick={handleCloseModal}
+            onClick={handleUpdateRole}
           />
           <Button
             variant="primaryButton"
@@ -189,8 +224,6 @@ function RolesScreen() {
     );
   };
 
-  useEffect(() => {}, [roleData]);
-
   const openDeleteRoleModal = () => {
     if (!isModalDeleteOpen) return null;
     return (
@@ -200,7 +233,7 @@ function RolesScreen() {
           <Button
             variant="primaryButton"
             text="Deletar"
-            onClick={handleCloseModal}
+            onClick={handleDeleteRole}
           />
           <Button
             variant="primaryButton"
@@ -232,11 +265,14 @@ function RolesScreen() {
             description={item.role}
             key={item.id}
             seeAction={async () => {
+              formatSelectedPermissionsResponse(item.id);
               setRoleData(await getRoleById(item.id));
               setIsModalSeeOpen(true);
               setIsModalOpen(true);
             }}
             updateAction={async () => {
+              formatSelectedPermissionsResponse(item.id);
+              setRoleData(await getRoleById(item.id));
               setRoleData(await getRoleById(item.id));
               setIsModalUpdateOpen(true);
               setIsModalOpen(true);
