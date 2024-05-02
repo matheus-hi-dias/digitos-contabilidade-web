@@ -16,7 +16,7 @@ export async function updateEmployee(id, data) {
 }
 
 export async function createEmployee(data) {
-  const response = await api.put('/employee', data, configHeader());
+  const response = await api.post('/employee/new-employee', data, configHeader());
   return response.data;
 }
 
