@@ -38,6 +38,7 @@ function DocumentsScreen() {
   });
   const [selectedDocumentTypes, setSelectedDocumentTypes] = useState([]);
   const [selectedClients, setSelectedClients] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleDocumentTypeToggle = (id) => {
     const index = selectedDocumentTypes.indexOf(id);
@@ -58,10 +59,14 @@ function DocumentsScreen() {
   };
 
   useEffect(() => {
-    getDocumentTypes().then(setDocumentsTypesList);
-    getClients().then(setClientsList);
-    getNatures().then(setDocumentNatureList);
-    getDocumentStorageLocal().then(setDocumentLocalList);
+    const loadData = async () => {
+      setDocumentsTypesList(await getDocumentTypes());
+      setClientsList(await getClients());
+      setDocumentNatureList(await getNatures());
+      setDocumentLocalList(await getDocumentStorageLocal());
+      setIsLoading(false);
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -250,6 +255,10 @@ function DocumentsScreen() {
       </>
     );
   };
+
+  if (isLoading) {
+    return <div className="documentsLayout">Loading...</div>;
+  }
 
   return (
     <div className="documentsLayout">
