@@ -125,7 +125,6 @@ function UsersScreen() {
       permissions: selectedPermissions,
     };
     delete data.role;
-    console.log({ data });
 
     await updateEmployee(userData.id, data);
 
@@ -318,9 +317,6 @@ function UsersScreen() {
       </>
     );
   };
-
-  useEffect(() => { console.log({ userData }); }, [userData]);
-  useEffect(() => { console.log({ selectedPermissions }); }, [selectedPermissions]);
 
   return (
     <div className="usersLayout">

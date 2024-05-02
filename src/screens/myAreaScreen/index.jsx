@@ -16,17 +16,14 @@ function MyAreaScreen() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getEmployeeProfile();
-      console.log({ response });
       setMyData(response);
 
       const myPermissionsResponse = await getPermissionsByEmployeeId(response.id);
-      console.log({ myPermissionsResponse });
       setMyPermissions(myPermissionsResponse);
 
       const rolePermissionsResponse = response.role?.id
         ? await getPermissionByRoleId(response.role.id)
         : [];
-      console.log({ rolePermissionsResponse });
       setRolePermissions(rolePermissionsResponse);
       setIsLoading(false);
     };

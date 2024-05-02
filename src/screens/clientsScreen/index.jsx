@@ -66,7 +66,6 @@ function ClientsScreen() {
 
   const handleCreateClient = async (event) => {
     event.preventDefault();
-    // console.log({ clientData });
     await createClient(clientData);
     handleCloseModal();
   };

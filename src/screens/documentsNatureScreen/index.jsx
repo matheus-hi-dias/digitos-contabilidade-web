@@ -54,21 +54,18 @@ function DocumentsNatureScreen() {
 
   const handleCreateNature = async (event) => {
     event.preventDefault();
-    // console.log({ natureData });
     await createNature(natureData);
     handleCloseModal();
   };
 
   const handleUpdateNature = async (event) => {
     event.preventDefault();
-    // console.log({ natureData });
     await updateNature(natureData.id, natureData);
     handleCloseModal();
   };
 
   const handleDeleteNature = async (event) => {
     event.preventDefault();
-    // console.log({ natureData });
     await deleteNature(natureData.id);
     handleCloseModal();
   };

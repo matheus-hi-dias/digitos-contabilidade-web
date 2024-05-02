@@ -145,8 +145,6 @@ function DocumentTypeScreen() {
     );
   };
 
-  useEffect(() => { console.log({ documentTypeData }); }, [documentTypeData]);
-
   const openDeleteDocumentTypeModal = () => {
     if (!isModalDeleteOpen) return null;
     return (
