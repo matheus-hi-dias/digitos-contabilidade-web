@@ -1,0 +1,33 @@
+@use '../../styles/variables.scss';
+.myAreaScreenLayout {
+  width: 100%;
+  height: 100vh;
+  background-color: variables.$PRIMARY_COLOR;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .myAreaScreenContent {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1%;
+    .myAreaTitle {
+      align-self: center;
+    }
+  }
+
+  .permissionsDiv {
+    height: 40%;
+  }
+
+  .myPermissionsListContainer {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background-color: rgba(variables.$N300, 0.4);
+    color: variables.$N000;
+  }
+}
