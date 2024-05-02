@@ -6,7 +6,7 @@ export function formatDate(date) {
 }
 
 export function setEmptyValues(data) {
-  if (!data) return;
+  if (!data || data.length === 0) return;
   const emptyValue = data.find((item) => item.id === '' || item.document_code === '');
   if (emptyValue) return;
 
