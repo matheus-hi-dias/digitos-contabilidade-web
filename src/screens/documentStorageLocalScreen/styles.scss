@@ -30,6 +30,14 @@
 
       color: variables.$N000;
 
+      label {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+      }
+
       .documentNatureInteractive {
         background-color: rgba($color: variables.$N300, $alpha: 0.4);
         color: variables.$N000;
@@ -37,16 +45,16 @@
         box-shadow: 0px 4px 4px rgba($color: variables.$N1000, $alpha: 0.25);
         border-radius: 8px;
         padding: 11px 22px;
-        margin-left: 12px;
         max-height: 45px;
-
       }
 
       .documentNatureSelect {
-        width: 141px;
-        cursor: pointer;
-        option {
-          color: variables.$N1000;
+        select {
+          width: 141px;
+          cursor: pointer;
+          option {
+            color: variables.$N1000;
+          }
         }
       }
 

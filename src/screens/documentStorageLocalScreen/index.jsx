@@ -1,16 +1,44 @@
-import { useState } from 'react';
-import { Button } from '../../components';
+import { useEffect, useState } from 'react';
+import { Button, Select, TextInput } from '../../components';
 import './styles.scss';
 
-import { documentNatureList } from '../../constants/mocks';
+import { getNatures } from '../../services/documentsNature';
+import { setEmptyValues } from '../../utils';
+import { createDocumentStorageLocal } from '../../services/documentsStorageLocal';
 
 function DocumentStorageLocalScreen() {
   const [selectedNature, setSelectedNature] = useState('');
+  const [documentNatureList, setDocumentNatureList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [local, setLocal] = useState('');
+
+  useEffect(() => {
+    getNatures().then(setDocumentNatureList).then(() => setIsLoading(false));
+  }, []);
 
   const handleNatureChange = (event) => {
     const { value } = event.target;
     setSelectedNature(value);
   };
+
+  const handleClearFields = () => {
+    setSelectedNature('');
+    setLocal('');
+  };
+
+  const handleCreateLocal = async () => {
+    const data = {
+      doc_location: local,
+      nature_id: selectedNature,
+    };
+
+    await createDocumentStorageLocal(data);
+    handleClearFields();
+  };
+
+  if (isLoading) {
+    return <div className="documentStorageLocalScreen">Loading...</div>;
+  }
 
   return (
     <div className="documentStorageLocalScreen">
@@ -18,27 +46,26 @@ function DocumentStorageLocalScreen() {
         <div className="selectInputContainer">
           <label htmlFor="documentNatureSelect">
             Natureza:
-            <select
+            <Select
+              className="documentNatureSelect"
               name="documentNatureSelect"
               id="documentNatureSelect"
-              className="documentNatureInteractive documentNatureSelect"
               value={selectedNature}
               onChange={handleNatureChange}
-            >
-              {documentNatureList.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.nature}
-                </option>
-              ))}
-            </select>
+              options={setEmptyValues(documentNatureList)}
+              optionKey="id"
+              optionLabels={['nature']}
+            />
           </label>
           <label htmlFor="documentNatureInput">
             Local:
-            <input
+            <TextInput
+              variant="formField"
               type="text"
               name="documentNatureInput"
               id="documentNatureInput"
-              className="documentNatureInteractive documentNatureInput"
+              value={local}
+              onChange={(e) => setLocal(e.target.value)}
             />
           </label>
         </div>
@@ -47,11 +74,13 @@ function DocumentStorageLocalScreen() {
             buttonCustomClass="buttonDocLocalCustomClass"
             variant="primaryButton"
             text="Cadastrar"
+            onClick={handleCreateLocal}
           />
           <Button
             buttonCustomClass="buttonDocLocalCustomClass"
             variant="primaryButton"
             text="Cancelar"
+            onClick={handleClearFields}
           />
         </div>
       </div>
