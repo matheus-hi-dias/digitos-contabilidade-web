@@ -1,33 +1,83 @@
 import { useEffect, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, SearchInput,
+  Select,
+  TextInput,
 } from '../../components';
 import './styles.scss';
 
-import { userList, roleList } from '../../constants/mocks';
+import {
+  createEmployee, deleteEmployee, getEmployeeById, getEmployees, updateEmployee,
+} from '../../services/employees';
+import { getRoles } from '../../services/roles';
+import { setEmptyValues } from '../../utils';
+import getPermissions from '../../services/permissions';
+import { getPermissionsByEmployeeId } from '../../services/employeesPermission';
+import permissions from '../../constants/permissions';
 
 function UsersScreen() {
+  const [userList, setUserList] = useState([]);
+  const [roleList, setRoleList] = useState([]);
+  const [permissionList, setPermissionList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalChildren, setModalChildren] = useState(null);
-  const [userData, setUserData] = useState({
-    email: '',
-    username: '',
-    name: '',
-    role_id: undefined,
-  });
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalSeeOpen, setIsModalSeeOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  useEffect(() => {
+    getEmployees().then(setUserList);
+  }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
+
+  useEffect(() => {
+    getRoles().then(setRoleList);
+    getPermissions().then(setPermissionList);
+  }, []);
+
+  const formatSelectedPermissionsResponse = async (employeeId) => {
+    const response = await getPermissionsByEmployeeId(employeeId);
+    const permissionsId = response.map((item) => item.id);
+    setSelectedPermissions(permissionsId);
+  };
+
+  const handleOpenModal = async (modalType, itemId) => {
+    switch (modalType) {
+      case 'create':
+        setIsModalCreateOpen(true);
+        setIsModalOpen(true);
+        break;
+      case 'see':
+        await getEmployeeById(itemId).then(setUserData);
+        formatSelectedPermissionsResponse(itemId);
+        setIsModalSeeOpen(true);
+        setIsModalOpen(true);
+        break;
+      case 'update':
+        await getEmployeeById(itemId).then(setUserData);
+        formatSelectedPermissionsResponse(itemId);
+        setIsModalUpdateOpen(true);
+        setIsModalOpen(true);
+        break;
+      case 'delete':
+        await getEmployeeById(itemId).then(setUserData);
+        setIsModalDeleteOpen(true);
+        setIsModalOpen(true);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setUserData({
-      email: '',
-      username: '',
-      name: '',
-      role_id: undefined,
-    });
+    setIsModalCreateOpen(false);
+    setIsModalSeeOpen(false);
+    setIsModalUpdateOpen(false);
+    setIsModalDeleteOpen(false);
+    setUserData({});
+    setSelectedPermissions([]);
   };
 
   const handleUserData = (e) => {
@@ -37,41 +87,102 @@ function UsersScreen() {
     }));
   };
 
+  const handlePermissionsToggle = (key) => {
+    const newSelection = selectedPermissions.includes(key)
+      ? selectedPermissions.filter((item) => item !== key)
+      : [...selectedPermissions, key];
+    setSelectedPermissions(newSelection);
+  };
+
+  const verifyChecked = (key) => {
+    if (typeof selectedPermissions[0] === 'number') {
+      return selectedPermissions.includes(key);
+    }
+
+    if (typeof selectedPermissions[0] === 'object') {
+      return selectedPermissions.some((item) => item.id === key);
+    }
+  };
+
+  const handleCreateEmployee = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      ...userData,
+      permissions: selectedPermissions,
+    };
+    await createEmployee(data);
+
+    handleCloseModal();
+  };
+
+  const handleUpdateEmployee = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      ...userData,
+      role_id: userData.role != null ? userData.role.id : null,
+      permissions: selectedPermissions,
+    };
+    delete data.role;
+    console.log({ data });
+
+    await updateEmployee(userData.id, data);
+
+    handleCloseModal();
+  };
+
+  const handleDeleteEmployee = async (event) => {
+    event.preventDefault();
+    await deleteEmployee(userData.id);
+    handleCloseModal();
+  };
+
   const openCreateUserModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalCreateOpen) return null;
+    return (
       <>
         <label htmlFor="email">
           Email*:
-          <input type="text" name="email" onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="email" onChange={handleUserData} />
         </label>
         <label htmlFor="username">
           Nome de usuário*:
-          <input type="text" name="username" onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="username" onChange={handleUserData} />
         </label>
         <label htmlFor="name">
           Nome*:
-          <input type="text" name="name" onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="name" onChange={handleUserData} />
         </label>
         <label htmlFor="password">
           Senha*:
-          <input type="text" name="password" onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="password" onChange={handleUserData} />
         </label>
         <label htmlFor="role_id">
           Cargo*:
-          <select type="text" name="role_id" onChange={handleUserData}>
-            {roleList.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.role}
-              </option>
-            ))}
-          </select>
+          <Select name="role_id" onChange={handleUserData} options={setEmptyValues(roleList)} optionKey="id" optionLabels={['role']} />
         </label>
+        <div className="permissionsContainer">
+          Permissões:
+          <List containerClassName="permissionListContainer">
+            {permissionList.map((value) => (
+              <label key={value.id} htmlFor={value.permission}>
+                <input
+                  type="checkbox"
+                  name={value.permission}
+                  checked={verifyChecked(value.id)}
+                  onChange={() => handlePermissionsToggle(value.id)}
+                />
+                {permissions[value.permission]}
+              </label>
+            ))}
+          </List>
+        </div>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
             text="Cadastrar"
-            onClick={handleCloseModal}
+            onClick={handleCreateEmployee}
           />
           <Button
             variant="primaryButton"
@@ -79,32 +190,47 @@ function UsersScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openSeeUserModal = (id) => {
-    const selectedUserData = userList.find((item) => item.id === id);
-    setUserData(selectedUserData);
-    handleOpenModal();
-    setModalChildren(
+  const openSeeUserModal = () => {
+    if (!isModalSeeOpen) return null;
+    return (
       <>
         <label htmlFor="email">
           Email*:
-          <input type="text" name="email" disabled readOnly value={selectedUserData.email} />
+          <TextInput variant="formField" type="text" name="email" disabled readOnly value={userData.email} />
         </label>
         <label htmlFor="username">
           Nome de usuário*:
-          <input type="text" name="username" disabled readOnly value={selectedUserData.username} />
+          <TextInput variant="formField" type="text" name="username" disabled readOnly value={userData.username} />
         </label>
         <label htmlFor="name">
           Nome*:
-          <input type="text" name="name" disabled readOnly value={selectedUserData.name} />
+          <TextInput variant="formField" type="text" name="name" disabled readOnly value={userData.name} />
         </label>
         <label htmlFor="role_id">
           Cargo*:
-          <input type="text" name="role_id" disabled readOnly value={selectedUserData.role_id} />
+          <TextInput variant="formField" type="text" name="role_id" disabled readOnly value={userData.role?.role || ''} />
         </label>
+        <div className="permissionsContainer">
+          Permissões:
+          <List containerClassName="permissionListContainer">
+            {permissionList.map((value) => (
+              <label key={value.id} htmlFor={value.permission}>
+                <input
+                  type="checkbox"
+                  name={value.permission}
+                  checked={verifyChecked(value.id)}
+                  disabled
+                  readOnly
+                />
+                {permissions[value.permission]}
+              </label>
+            ))}
+          </List>
+        </div>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
@@ -112,47 +238,55 @@ function UsersScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  const openUpdateUserModal = (id) => {
-    const selectedUserData = userList.find((item) => item.id === id);
-    setUserData(selectedUserData);
-    handleOpenModal();
-    setModalChildren(
+  const openUpdateUserModal = () => {
+    if (!isModalUpdateOpen) return null;
+    return (
       <>
         <label htmlFor="email">
           Email*:
-          <input type="text" name="email" defaultValue={selectedUserData.email} onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="email" defaultValue={userData.email} onChange={handleUserData} />
         </label>
         <label htmlFor="username">
           Nome de usuário*:
-          <input type="text" name="username" defaultValue={selectedUserData.username} onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="username" defaultValue={userData.username} onChange={handleUserData} />
         </label>
         <label htmlFor="name">
           Nome*:
-          <input type="text" name="name" defaultValue={selectedUserData.name} onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="name" defaultValue={userData.name} onChange={handleUserData} />
         </label>
         <label htmlFor="password">
           Senha*:
-          <input type="text" name="password" onChange={handleUserData} />
+          <TextInput variant="formField" type="text" name="password" onChange={handleUserData} />
         </label>
         <label htmlFor="role_id">
           Cargo*:
-          <select type="text" name="role_id" defaultValue={selectedUserData.role_id} onChange={handleUserData}>
-            {roleList.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.role}
-              </option>
-            ))}
-          </select>
+          <Select name="role_id" onChange={handleUserData} options={setEmptyValues(roleList)} optionKey="id" optionLabels={['role']} defaultValue={userData.role?.id} />
         </label>
+        <div className="permissionsContainer">
+          Permissões:
+          <List containerClassName="permissionListContainer">
+            {permissionList.map((value) => (
+              <label key={value.id} htmlFor={value.permission}>
+                <input
+                  type="checkbox"
+                  name={value.permission}
+                  checked={verifyChecked(value.id)}
+                  onChange={() => handlePermissionsToggle(value.id)}
+                />
+                {permissions[value.permission]}
+              </label>
+            ))}
+          </List>
+        </div>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
             text="Alterar"
-            onClick={handleCloseModal}
+            onClick={handleUpdateEmployee}
           />
           <Button
             variant="primaryButton"
@@ -160,22 +294,20 @@ function UsersScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
 
-  useEffect(() => {}, [userData]);
-
   const openDeleteUserModal = () => {
-    handleOpenModal();
-    setModalChildren(
+    if (!isModalDeleteOpen) return null;
+    return (
       <>
         <h2>Deletar usuário?</h2>
         <div className="modalButtonsContainer">
           <Button
             variant="primaryButton"
             text="Deletar"
-            onClick={handleCloseModal}
+            onClick={handleDeleteEmployee}
           />
           <Button
             variant="primaryButton"
@@ -183,14 +315,22 @@ function UsersScreen() {
             onClick={handleCloseModal}
           />
         </div>
-      </>,
+      </>
     );
   };
+
+  useEffect(() => { console.log({ userData }); }, [userData]);
+  useEffect(() => { console.log({ selectedPermissions }); }, [selectedPermissions]);
 
   return (
     <div className="usersLayout">
       <div className="usersSearchAddContainer">
-        <Button variant="secondaryButton" icon={<AddIcon size={24} />} text="Adicionar" onClick={openCreateUserModal} />
+        <Button
+          variant="secondaryButton"
+          icon={<AddIcon size={24} />}
+          text="Adicionar"
+          onClick={() => handleOpenModal('create')}
+        />
         <SearchInput />
       </div>
       <List containerClassName="usersListContainer">
@@ -198,13 +338,22 @@ function UsersScreen() {
           <ListItem
             description={item.username}
             key={item.id}
-            seeAction={() => openSeeUserModal(item.id)}
-            updateAction={() => openUpdateUserModal(item.id)}
-            deleteAction={() => openDeleteUserModal(item.id)}
+            seeAction={() => handleOpenModal('see', item.id)}
+            updateAction={() => handleOpenModal('update', item.id)}
+            deleteAction={() => handleOpenModal('delete', item.id)}
           />
         ))}
       </List>
-      {isModalOpen && <Modal onClose={handleCloseModal}>{modalChildren}</Modal>}
+      {isModalOpen && (
+      <Modal onClose={handleCloseModal}>
+        {
+        (isModalCreateOpen && (openCreateUserModal()))
+        || (isModalSeeOpen && (openSeeUserModal()))
+        || (isModalUpdateOpen && (openUpdateUserModal()))
+        || (isModalDeleteOpen && (openDeleteUserModal()))
+      }
+      </Modal>
+      )}
     </div>
   );
 }
