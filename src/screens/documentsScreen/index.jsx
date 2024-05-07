@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AddIcon, Button, List, ListItem, Modal, SearchInput, Select,
   TextInput,
@@ -16,6 +16,7 @@ import { getNatures } from '../../services/documentsNature';
 import { getDocumentStorageLocal } from '../../services/documentsStorageLocal';
 
 function DocumentsScreen() {
+  const [documentsResponse, setDocumentsResponse] = useState([]);
   const [documentsList, setDocumentsList] = useState([]);
   const [documentsTypesList, setDocumentsTypesList] = useState([]);
   const [clientsList, setClientsList] = useState([]);
@@ -38,28 +39,53 @@ function DocumentsScreen() {
   });
   const [selectedDocumentTypes, setSelectedDocumentTypes] = useState([]);
   const [selectedClients, setSelectedClients] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const firstRender = useRef(true);
 
-  const handleDocumentTypeToggle = (id) => {
-    const index = selectedDocumentTypes.indexOf(id);
-    if (index === -1) {
-      setSelectedDocumentTypes([...selectedDocumentTypes, id]);
-    } else {
-      setSelectedDocumentTypes(selectedDocumentTypes.filter((item) => item !== id));
+  const handleFilters = (documentTypesFilter, clientsFilter, search) => {
+    let response = [...documentsResponse];
+    if (clientsFilter.length > 0) {
+      response = response.filter((document) => clientsFilter.includes(document.client_id));
     }
+    if (documentTypesFilter.length > 0) {
+      response = response
+        .filter((document) => documentTypesFilter.includes(document.doc_type_id));
+    }
+    if (search) {
+      response = response
+        .filter((document) => document.document_code.toString().includes(search)
+        || document.name.toUpperCase().includes(search.toUpperCase()));
+    }
+    setDocumentsList(response);
   };
 
-  const handleClientsToggle = (id) => {
-    const index = selectedClients.indexOf(id);
-    if (index === -1) {
-      setSelectedClients([...selectedClients, id]);
-    } else {
-      setSelectedClients(selectedClients.filter((item) => item !== id));
-    }
+  const handleSearchTextChange = (event) => {
+    setSearchText(event.target.value);
+    handleFilters(selectedDocumentTypes, selectedClients, event.target.value);
+  };
+
+  const handleDocumentTypeToggle = (key) => {
+    const newSelection = selectedDocumentTypes.includes(key)
+      ? selectedDocumentTypes.filter((item) => item !== key)
+      : [...selectedDocumentTypes, key];
+    setSelectedDocumentTypes(newSelection);
+    handleFilters(newSelection, selectedClients, searchText);
+  };
+
+  const handleClientsToggle = (key) => {
+    const newSelection = selectedClients.includes(key)
+      ? selectedClients.filter((item) => item !== key)
+      : [...selectedClients, key];
+    setSelectedClients(newSelection);
+    handleFilters(selectedDocumentTypes, newSelection, searchText);
   };
 
   useEffect(() => {
     const loadData = async () => {
+      const documents = await getDocuments();
+      setDocumentsResponse(documents);
+      setDocumentsList(documents);
       setDocumentsTypesList(await getDocumentTypes());
       setClientsList(await getClients());
       setDocumentNatureList(await getNatures());
@@ -70,8 +96,13 @@ function DocumentsScreen() {
   }, []);
 
   useEffect(() => {
-    if (!isModalOpen) {
-      getDocuments().then(setDocumentsList);
+    if (!isModalOpen && !firstRender.current) {
+      const fetchData = async () => {
+        const documents = await getDocuments();
+        setDocumentsResponse(documents);
+        setDocumentsList(documents);
+      };
+      fetchData();
     }
   }, [isModalCreateOpen, isModalDeleteOpen, isModalUpdateOpen]);
 
@@ -108,14 +139,7 @@ function DocumentsScreen() {
 
   const handleUpdateDocument = async (event) => {
     event.preventDefault();
-    const updatedData = {
-      name: documentData.name,
-      nature_id: documentData.document_nature.id,
-      location_id: documentData.document_location.id,
-      doc_type_id: documentData.document_type.id,
-      client_id: documentData.client.id,
-    };
-    await updateDocument(documentData.document_code, updatedData);
+    await updateDocument(documentData.document_code, documentData);
     handleCloseModal();
   };
 
@@ -178,19 +202,25 @@ function DocumentsScreen() {
         </label>
         <label htmlFor="name">
           Tipo:
-          <TextInput variant="formField" type="text" disabled name="name" value={documentData.document_type.doc_type} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentsTypesList.find((docType) => docType.id === documentData.doc_type_id)?.doc_type || ''} />
         </label>
         <label htmlFor="name">
           Cliente:
-          <TextInput variant="formField" type="text" disabled name="name" value={documentData.client.name} />
+          <TextInput
+            variant="formField"
+            type="text"
+            disabled
+            name="name"
+            value={clientsList.find((client) => client.id === documentData.client_id) ? `${clientsList.find((client) => client.id === documentData.client_id).name} - ${clientsList.find((client) => client.id === documentData.client_id).cpfCnpj}` : ''}
+          />
         </label>
         <label htmlFor="name">
           Natureza:
-          <TextInput variant="formField" type="text" disabled name="name" value={documentData.document_nature.nature} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentNatureList.find((docNature) => docNature.id === documentData.nature_id)?.nature || ''} />
         </label>
         <label htmlFor="name">
           Local/caminho:
-          <TextInput variant="formField" type="text" disabled name="name" value={documentData.document_location.doc_location} />
+          <TextInput variant="formField" type="text" disabled name="name" value={documentLocalList.find((local) => local.id === documentData.location_id)?.doc_location || ''} />
         </label>
         <label htmlFor="name">
           Data cadastro:
@@ -221,19 +251,19 @@ function DocumentsScreen() {
         </label>
         <label htmlFor="doc_type_id">
           Tipo*:
-          <Select type="text" name="doc_type_id" onChange={handleDocumentData} options={setEmptyValues(documentsTypesList)} optionKey="id" optionLabels={['doc_type']} defaultValue={documentData.document_type.id} />
+          <Select type="text" name="doc_type_id" onChange={handleDocumentData} options={setEmptyValues(documentsTypesList)} optionKey="id" optionLabels={['doc_type']} defaultValue={documentData.doc_type_id} />
         </label>
         <label htmlFor="client_id">
           Cliente*:
-          <Select type="text" name="client_id" onChange={handleDocumentData} options={setEmptyValues(clientsList)} optionKey="id" optionLabels={['name', 'cpfCnpj']} defaultValue={documentData.client.id} />
+          <Select type="text" name="client_id" onChange={handleDocumentData} options={setEmptyValues(clientsList)} optionKey="id" optionLabels={['name', 'cpfCnpj']} defaultValue={documentData.client_id} />
         </label>
         <label htmlFor="nature_id">
           Natureza*:
-          <Select type="text" name="nature_id" onChange={handleDocumentData} options={setEmptyValues(documentNatureList)} optionKey="id" optionLabels={['nature']} defaultValue={documentData.document_nature.id} />
+          <Select type="text" name="nature_id" onChange={handleDocumentData} options={setEmptyValues(documentNatureList)} optionKey="id" optionLabels={['nature']} defaultValue={documentData.nature_id} />
         </label>
         <label htmlFor="location_id">
           Local/caminho*:
-          <Select type="text" name="location_id" onChange={handleDocumentData} options={setEmptyValues(documentLocalList)} optionKey="id" optionLabels={['doc_location']} defaultValue={documentData.document_location.id} />
+          <Select type="text" name="location_id" onChange={handleDocumentData} options={setEmptyValues(documentLocalList)} optionKey="id" optionLabels={['doc_location']} defaultValue={documentData.location_id} />
         </label>
         <div className="modalButtonsContainer">
           <Button variant="primaryButton" text="Cadastrar" onClick={handleUpdateDocument} />
@@ -272,7 +302,7 @@ function DocumentsScreen() {
             setIsModalOpen(true);
           }}
         />
-        <SearchInput />
+        <SearchInput onChange={handleSearchTextChange} />
       </div>
       <div className="documentsFilterContainer">
         <div className="documentsFilterContentDiv">
