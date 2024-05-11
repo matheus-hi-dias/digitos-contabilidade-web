@@ -37,7 +37,7 @@
       border-radius: 8px;
     }
     .successLeftBar {
-      background-color: variables.$PRIMARY_COLOR;
+      background-color: variables.$SECONDARY_COLOR;
     }
     .errorLeftBar {
       background-color: variables.$DANGER_DARK;
@@ -52,7 +52,7 @@
       align-items: center;
     }
     .successIcon {
-      background-color: variables.$PRIMARY_COLOR;
+      background-color: variables.$SECONDARY_COLOR;
     }
     .errorIcon {
       background-color: variables.$DANGER_DARK;
