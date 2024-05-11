@@ -14,6 +14,7 @@ import getPermissions from '../../services/permissions';
 import { getPermissionByRoleId } from '../../services/rolesPermission';
 
 function RolesScreen() {
+  const [roleResponse, setRoleResponse] = useState([]);
   const [roleList, setRoleList] = useState([]);
   const [permissionList, setPermissionList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,8 +31,19 @@ function RolesScreen() {
   }, []);
 
   useEffect(() => {
-    getRoles().then(setRoleList);
+    const fetchData = async () => {
+      const response = await getRoles();
+      setRoleResponse(response);
+      setRoleList(response);
+    };
+    fetchData();
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
+
+  const handleSearch = (e) => {
+    const filteredRoles = roleResponse
+      .filter((role) => role.role.toLowerCase().includes(e.target.value.toLowerCase()));
+    setRoleList(filteredRoles);
+  };
 
   const handlePermissionsToggle = (key) => {
     const newSelection = selectedPermissions.includes(key)
@@ -257,7 +269,7 @@ function RolesScreen() {
             setIsModalOpen(true);
           }}
         />
-        <SearchInput />
+        <SearchInput onChange={handleSearch} />
       </div>
       <List containerClassName="rolesListContainer">
         {roleList.map((item) => (

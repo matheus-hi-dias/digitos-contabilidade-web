@@ -11,6 +11,7 @@ import {
 } from '../../services/documentsNature';
 
 function DocumentsNatureScreen() {
+  const [documentNatureResponse, setDocumentNatureResponse] = useState([]);
   const [documentNatureList, setDocumentNatureList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
@@ -25,8 +26,19 @@ function DocumentsNatureScreen() {
   } = useErrors();
 
   useEffect(() => {
-    getNatures().then((resp) => setDocumentNatureList(resp));
+    const fetchData = async () => {
+      const response = await getNatures();
+      setDocumentNatureResponse(response);
+      setDocumentNatureList(response);
+    };
+    fetchData();
   }, [isModalOpen]);
+
+  const handleSearch = (e) => {
+    const filteredNatures = documentNatureResponse
+      .filter((nature) => nature.nature.toLowerCase().includes(e.target.value.toLowerCase()));
+    setDocumentNatureList(filteredNatures);
+  };
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -129,7 +141,7 @@ function DocumentsNatureScreen() {
             handleOpenModal();
           }}
         />
-        <SearchInput />
+        <SearchInput onChange={handleSearch} />
       </div>
       <List containerClassName="documentNatureListContainer">
         {documentNatureList.map((item) => (

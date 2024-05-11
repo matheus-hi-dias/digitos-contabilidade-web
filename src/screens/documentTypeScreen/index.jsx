@@ -15,6 +15,7 @@ import {
 } from '../../services/documentsType';
 
 function DocumentTypeScreen() {
+  const [documentTypeResponse, setDocumentTypeResponse] = useState([]);
   const [documentTypeList, setDocumentTypeList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
@@ -26,9 +27,20 @@ function DocumentTypeScreen() {
 
   useEffect(() => {
     if (!isModalOpen) {
-      getDocumentTypes().then(setDocumentTypeList);
+      const fetchData = async () => {
+        const response = await getDocumentTypes();
+        setDocumentTypeResponse(response);
+        setDocumentTypeList(response);
+      };
+      fetchData();
     }
   }, [isModalCreateOpen, isModalDeleteOpen, isModalUpdateOpen]);
+
+  const handleSearch = (e) => {
+    const filteredDocTypes = documentTypeResponse
+      .filter((docType) => docType.doc_type.toLowerCase().includes(e.target.value.toLowerCase()));
+    setDocumentTypeList(filteredDocTypes);
+  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -178,7 +190,7 @@ function DocumentTypeScreen() {
             setIsModalCreateOpen(true);
           }}
         />
-        <SearchInput />
+        <SearchInput onChange={handleSearch} />
       </div>
       <List containerClassName="documentTypeListContainer">
         {documentTypeList.map((item) => (

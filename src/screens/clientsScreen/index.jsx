@@ -16,6 +16,7 @@ import {
 } from '../../services/clientsService';
 
 function ClientsScreen() {
+  const [clientsResponse, setClientsResponse] = useState([]);
   const [clientsList, setClientsList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
@@ -29,8 +30,19 @@ function ClientsScreen() {
   });
 
   useEffect(() => {
-    getClients().then((resp) => setClientsList(resp));
+    const fetchData = async () => {
+      const response = await getClients();
+      setClientsResponse(response);
+      setClientsList(response);
+    };
+    fetchData();
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
+
+  const handleSearch = (e) => {
+    const filteredClients = clientsResponse
+      .filter((client) => client.name.toLowerCase().includes(e.target.value.toLowerCase()));
+    setClientsList(filteredClients);
+  };
 
   // const handleOpenModal = () => {
   //   setIsModalOpen(true);
@@ -238,7 +250,7 @@ function ClientsScreen() {
             setIsModalOpen(true);
           }}
         />
-        <SearchInput />
+        <SearchInput onChange={handleSearch} />
       </div>
       <List containerClassName="clientsListContainer">
         {clientsList.map((item) => (

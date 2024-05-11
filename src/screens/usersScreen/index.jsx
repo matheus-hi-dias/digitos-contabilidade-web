@@ -16,6 +16,7 @@ import { getPermissionsByEmployeeId } from '../../services/employeesPermission';
 import permissions from '../../constants/permissions';
 
 function UsersScreen() {
+  const [userResponse, setUserResponse] = useState([]);
   const [userList, setUserList] = useState([]);
   const [roleList, setRoleList] = useState([]);
   const [permissionList, setPermissionList] = useState([]);
@@ -28,13 +29,24 @@ function UsersScreen() {
   const [selectedPermissions, setSelectedPermissions] = useState([]);
 
   useEffect(() => {
-    getEmployees().then(setUserList);
+    const fetchData = async () => {
+      const response = await getEmployees();
+      setUserResponse(response);
+      setUserList(response);
+    };
+    fetchData();
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
 
   useEffect(() => {
     getRoles().then(setRoleList);
     getPermissions().then(setPermissionList);
   }, []);
+
+  const handleSearch = (e) => {
+    const filteredUsers = userResponse
+      .filter((user) => user.username.toLowerCase().includes(e.target.value.toLowerCase()));
+    setUserList(filteredUsers);
+  };
 
   const formatSelectedPermissionsResponse = async (employeeId) => {
     const response = await getPermissionsByEmployeeId(employeeId);
@@ -327,7 +339,7 @@ function UsersScreen() {
           text="Adicionar"
           onClick={() => handleOpenModal('create')}
         />
-        <SearchInput />
+        <SearchInput onChange={handleSearch} />
       </div>
       <List containerClassName="usersListContainer">
         {userList.map((item) => (
