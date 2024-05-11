@@ -10,11 +10,6 @@ export async function getEmployeeById(id) {
   return response.data;
 }
 
-export async function getEmployeeProfile() {
-  const response = await api.get('/employee/my-profile', configHeader());
-  return response.data;
-}
-
 export async function updateEmployee(id, data) {
   const response = await api.put(`/employee/${id}`, data, configHeader());
   return response.data;

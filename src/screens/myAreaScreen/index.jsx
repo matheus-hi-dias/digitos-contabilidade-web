@@ -3,7 +3,7 @@ import './styles.scss';
 import { List, ListItem, TextInput } from '../../components';
 
 import permissions from '../../constants/permissions';
-import { getEmployeeProfile } from '../../services/employees';
+import { getEmployeeProfile } from '../../services/myProfile';
 import { getPermissionsByEmployeeId } from '../../services/employeesPermission';
 import { getPermissionByRoleId } from '../../services/rolesPermission';
 
