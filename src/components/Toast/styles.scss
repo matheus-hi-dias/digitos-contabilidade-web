@@ -1,6 +1,6 @@
 @use '../../styles//variables';
 
-.responsePopupWrapper {
+.toastWrapper {
   position: absolute;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   padding: 16px;
   pointer-events: none;
 
-  .responsePopup {
+  .toast {
     position: absolute;
     bottom: 16px;
 
@@ -58,7 +58,7 @@
       background-color: variables.$DANGER_DARK;
     }
 
-    .responsePopupText {
+    .responseToast {
       font-size: variables.$FONT-MEDIUM;
     }
   }
