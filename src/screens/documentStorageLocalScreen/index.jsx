@@ -5,8 +5,11 @@ import './styles.scss';
 import { getNatures } from '../../services/documentsNature';
 import { setEmptyValues } from '../../utils';
 import { createDocumentStorageLocal } from '../../services/documentsStorageLocal';
+import useToast from '../../hooks/useToast';
 
 function DocumentStorageLocalScreen() {
+  const toast = useToast();
+
   const [selectedNature, setSelectedNature] = useState('');
   const [documentNatureList, setDocumentNatureList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,13 +30,19 @@ function DocumentStorageLocalScreen() {
   };
 
   const handleCreateLocal = async () => {
-    const data = {
-      doc_location: local,
-      nature_id: selectedNature,
-    };
+    try {
+      const data = {
+        doc_location: local,
+        nature_id: selectedNature,
+      };
 
-    await createDocumentStorageLocal(data);
-    handleClearFields();
+      await createDocumentStorageLocal(data);
+      toast.successToast('Local cadastrado com sucesso!');
+      handleClearFields();
+    } catch (error) {
+      console.error('Erro ao cadastrar local', error);
+      toast.errorToast('Erro ao cadastrar local');
+    }
   };
 
   if (isLoading) {
