@@ -14,8 +14,11 @@ import { getDocumentTypes } from '../../services/documentsType';
 import { getClients } from '../../services/clientsService';
 import { getNatures } from '../../services/documentsNature';
 import { getDocumentStorageLocal } from '../../services/documentsStorageLocal';
+import useToast from '../../hooks/useToast';
 
 function DocumentsScreen() {
+  const toast = useToast();
+
   const [documentsResponse, setDocumentsResponse] = useState([]);
   const [documentsList, setDocumentsList] = useState([]);
   const [documentsTypesList, setDocumentsTypesList] = useState([]);
@@ -91,11 +94,14 @@ function DocumentsScreen() {
       setDocumentNatureList(await getNatures());
       setDocumentLocalList(await getDocumentStorageLocal());
       setIsLoading(false);
+      firstRender.current = false;
     };
     loadData();
   }, []);
 
   useEffect(() => {
+    console.log('firstRender', firstRender.current);
+    console.log('isModalOpen', isModalOpen);
     if (!isModalOpen && !firstRender.current) {
       const fetchData = async () => {
         const documents = await getDocuments();
@@ -132,21 +138,39 @@ function DocumentsScreen() {
   };
 
   const handleCreateDocument = async (event) => {
-    event.preventDefault();
-    await createDocument(documentData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await createDocument(documentData);
+      toast.successToast('Documento criado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao criar documento', error);
+      toast.errorToast('Erro ao criar documento');
+    }
   };
 
   const handleUpdateDocument = async (event) => {
-    event.preventDefault();
-    await updateDocument(documentData.document_code, documentData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await updateDocument(documentData.document_code, documentData);
+      toast.successToast('Documento atualizado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao atualizar documento', error);
+      toast.errorToast('Erro ao atualizar documento');
+    }
   };
 
   const handleDeleteDocument = async (event) => {
-    event.preventDefault();
-    await deleteDocument(documentData.document_code);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await deleteDocument(documentData.document_code);
+      toast.successToast('Documento deletado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao deletar documento', error);
+      toast.errorToast('Erro ao deletar documento');
+    }
   };
 
   const openCreateDocumentModal = () => {
