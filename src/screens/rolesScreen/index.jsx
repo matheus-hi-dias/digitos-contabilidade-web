@@ -12,8 +12,11 @@ import {
 } from '../../services/roles';
 import getPermissions from '../../services/permissions';
 import { getPermissionByRoleId } from '../../services/rolesPermission';
+import useToast from '../../hooks/useToast';
 
 function RolesScreen() {
+  const toast = useToast();
+
   const [roleResponse, setRoleResponse] = useState([]);
   const [roleList, setRoleList] = useState([]);
   const [permissionList, setPermissionList] = useState([]);
@@ -90,34 +93,50 @@ function RolesScreen() {
   };
 
   const handleCreateRole = async (event) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    const data = {
-      ...roleData,
-      permissions: selectedPermissions,
-    };
+      const data = {
+        ...roleData,
+        permissions: selectedPermissions,
+      };
 
-    await createRole(data);
-
-    handleCloseModal();
+      await createRole(data);
+      toast.successToast('Cargo cadastrado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao cadastrar cargo', error);
+      toast.errorToast('Erro ao cadastrar cargo');
+    }
   };
 
   const handleUpdateRole = async (event) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    const data = {
-      ...roleData,
-      permissions: selectedPermissions,
-    };
-    await updateRole(data.id, data);
-
-    handleCloseModal();
+      const data = {
+        ...roleData,
+        permissions: selectedPermissions,
+      };
+      await updateRole(data.id, data);
+      toast.successToast('Cargo atualizado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao atualizar cargo', error);
+      toast.errorToast('Erro ao atualizar cargo');
+    }
   };
 
   const handleDeleteRole = async (event) => {
-    event.preventDefault();
-    await deleteRole(roleData.id);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await deleteRole(roleData.id);
+      toast.successToast('Cargo deletado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao deletar cargo', error);
+      toast.errorToast('Erro ao deletar cargo');
+    }
   };
 
   const openCreateRoleModal = () => {
