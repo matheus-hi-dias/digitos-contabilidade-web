@@ -71,7 +71,7 @@ function DocumentsNatureScreen() {
     try {
       event.preventDefault();
       await createNature(natureData);
-      toast.successToast('Natureza cadastrada com sucesso');
+      toast.successToast('Natureza cadastrada com sucesso!');
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao cadastrar natureza', error);
@@ -83,7 +83,7 @@ function DocumentsNatureScreen() {
     try {
       event.preventDefault();
       await updateNature(natureData.id, natureData);
-      toast.successToast('Natureza atualizada com sucesso');
+      toast.successToast('Natureza atualizada com sucesso!');
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao atualizar natureza', error);
@@ -95,7 +95,7 @@ function DocumentsNatureScreen() {
     try {
       event.preventDefault();
       await deleteNature(natureData.id);
-      toast.successToast('Natureza deletada com sucesso');
+      toast.successToast('Natureza deletada com sucesso!');
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao deletar natureza', error);
