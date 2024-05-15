@@ -13,8 +13,11 @@ import './styles.scss';
 import {
   createDocumentType, deleteDocumentType, getDocumentTypeById, getDocumentTypes, updateDocumentType,
 } from '../../services/documentsType';
+import useToast from '../../hooks/useToast';
 
 function DocumentTypeScreen() {
+  const toast = useToast();
+
   const [documentTypeResponse, setDocumentTypeResponse] = useState([]);
   const [documentTypeList, setDocumentTypeList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,21 +64,39 @@ function DocumentTypeScreen() {
   };
 
   const handleCreateAction = async (event) => {
-    event.preventDefault();
-    await createDocumentType(documentTypeData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await createDocumentType(documentTypeData);
+      toast.successToast('Tipo de documento cadastrado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao cadastrar tipo de documento', error);
+      toast.errorToast('Erro ao cadastrar tipo de documento');
+    }
   };
 
   const handleUpdateAction = async (event) => {
-    event.preventDefault();
-    await updateDocumentType(documentTypeData.id, documentTypeData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await updateDocumentType(documentTypeData.id, documentTypeData);
+      toast.successToast('Tipo de documento atualizado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao atualizar tipo de documento', error);
+      toast.errorToast('Erro ao atualizar tipo de documento');
+    }
   };
 
   const handleDeleteAction = async (event) => {
-    event.preventDefault();
-    await deleteDocumentType(documentTypeData.id);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await deleteDocumentType(documentTypeData.id);
+      toast.successToast('Tipo de documento deletado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao deletar tipo de documento', error);
+      toast.errorToast('Erro ao deletar tipo de documento');
+    }
   };
 
   const openCreateDocumentTypeModal = () => {
