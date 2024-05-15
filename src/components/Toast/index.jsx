@@ -1,4 +1,5 @@
-import ReactDOM from 'react-dom';
+import { useEffect, useRef } from 'react';
+import useToast from '../../hooks/useToast';
 import { Close, Success } from '../Icons';
 import './styles.scss';
 
@@ -7,35 +8,47 @@ const toasTypes = {
     icon: <Success />,
     leftBarClass: 'successLeftBar',
     iconClass: 'successIcon',
-    message: 'Salvo com sucesso!',
   },
   error: {
     icon: <Close />,
     leftBarClass: 'errorLeftBar',
     iconClass: 'errorIcon',
-    message: 'Erro ao salvar',
   },
 };
 
-function Toast({ type }) {
+function Toast({ message, type, id }) {
   const {
-    icon, leftBarClass, iconClass, message,
+    icon, leftBarClass, iconClass,
   } = toasTypes[type];
+  const toast = useToast();
+
+  const timerID = useRef(null);
+
+  const handleDismiss = () => {
+    toast.removeToast(id);
+  };
+
+  useEffect(() => {
+    timerID.current = setTimeout(() => {
+      handleDismiss();
+    }, 6000);
+    return () => {
+      clearTimeout(timerID.current);
+    };
+  }, []);
   const leftBar = `leftBar ${leftBarClass}`;
   const iconContainer = `iconContainer ${iconClass}`;
-  return ReactDOM.createPortal(
-    <div className="toastWrapper">
-      <div className="toast">
-        <div className={leftBar} />
-        <span className={iconContainer}>
-          {icon}
-        </span>
-        <span className="toastText">
-          {message}
-        </span>
-      </div>
-    </div>,
-    document.getElementById('response-popup-root'),
+  return (
+
+    <div className="toast">
+      <div className={leftBar} />
+      <span className={iconContainer}>
+        {icon}
+      </span>
+      <span className="toastText">
+        {message}
+      </span>
+    </div>
   );
 }
 

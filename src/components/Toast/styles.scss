@@ -1,84 +1,64 @@
 @use '../../styles//variables';
 
-.toastWrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+.toast {
+  position: relative;
+  width: fit-content;
+  height: 80px;
+  background-color: variables.$N800;
+  color: variables.$N000;
+  border-radius: 10px 20px 20px 10px;
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  padding: 16px;
-  pointer-events: none;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  padding-right: 24px;
 
-  .toast {
-    position: absolute;
-    bottom: 16px;
+  animation: slideInRight 5s forwards;
 
-    width: fit-content;
-    height: 80px;
-    background-color: variables.$N800;
-    color: variables.$N000;
-    border-radius: 10px 20px 20px 10px;
+  .leftBar {
+    width: 16px;
+    height: 100%;
+    border-radius: 8px;
+  }
+  .successLeftBar {
+    background-color: variables.$SECONDARY_COLOR;
+  }
+  .errorLeftBar {
+    background-color: variables.$DANGER_DARK;
+  }
+
+  .iconContainer {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
-    padding-right: 24px;
+  }
+  .successIcon {
+    background-color: variables.$SECONDARY_COLOR;
+  }
+  .errorIcon {
+    background-color: variables.$DANGER_DARK;
+  }
 
-    animation: slideInRight 5s forwards;
-
-    .leftBar {
-      width: 16px;
-      height: 100%;
-      border-radius: 8px;
-    }
-    .successLeftBar {
-      background-color: variables.$SECONDARY_COLOR;
-    }
-    .errorLeftBar {
-      background-color: variables.$DANGER_DARK;
-    }
-
-    .iconContainer {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .successIcon {
-      background-color: variables.$SECONDARY_COLOR;
-    }
-    .errorIcon {
-      background-color: variables.$DANGER_DARK;
-    }
-
-    .responseToast {
-      font-size: variables.$FONT-MEDIUM;
-    }
+  .responseToast {
+    font-size: variables.$FONT-MEDIUM;
   }
 }
 
 @keyframes slideInRight {
   0% {
-    transform: translateY(120%);
-    display: none;
+    transform: translateX(120%);
   }
   25% {
     transform: translateX(0);
-    display: flex;
   }
   75% {
     transform: translateX(0);
-    display: flex;
   }
   100% {
-    transform: translateY(120%);
-    display: none;
+    transform: translateX(120%);
   }
 }
