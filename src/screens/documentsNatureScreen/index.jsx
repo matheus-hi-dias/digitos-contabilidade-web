@@ -9,8 +9,11 @@ import './styles.scss';
 import {
   createNature, deleteNature, getNatureById, getNatures, updateNature,
 } from '../../services/documentsNature';
+import useToast from '../../hooks/useToast';
 
 function DocumentsNatureScreen() {
+  const toast = useToast();
+
   const [documentNatureResponse, setDocumentNatureResponse] = useState([]);
   const [documentNatureList, setDocumentNatureList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,21 +68,39 @@ function DocumentsNatureScreen() {
   };
 
   const handleCreateNature = async (event) => {
-    event.preventDefault();
-    await createNature(natureData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await createNature(natureData);
+      toast.successToast('Natureza cadastrada com sucesso');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao cadastrar natureza', error);
+      toast.errorToast('Erro ao cadastrar natureza');
+    }
   };
 
   const handleUpdateNature = async (event) => {
-    event.preventDefault();
-    await updateNature(natureData.id, natureData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await updateNature(natureData.id, natureData);
+      toast.successToast('Natureza atualizada com sucesso');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao atualizar natureza', error);
+      toast.errorToast('Erro ao atualizar natureza');
+    }
   };
 
   const handleDeleteNature = async (event) => {
-    event.preventDefault();
-    await deleteNature(natureData.id);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await deleteNature(natureData.id);
+      toast.successToast('Natureza deletada com sucesso');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao deletar natureza', error);
+      toast.errorToast('Erro ao deletar natureza');
+    }
   };
 
   const openCreateNatureModal = () => {
