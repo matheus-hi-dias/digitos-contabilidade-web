@@ -28,7 +28,7 @@
     .modalCloseButton {
       background-color: transparent;
       border: none;
-      color: variables.$N000;
+      color: variables.$N900;
       align-self: flex-end;
       cursor: pointer;
     }
@@ -39,7 +39,7 @@
       align-items: flex-start;
       padding: 16px 48px 0 48px;
       gap: 16px;
-      color: variables.$N000;
+      color: variables.$N900;
 
       label {
         font-size: variables.$FONT-MEDIUM;
