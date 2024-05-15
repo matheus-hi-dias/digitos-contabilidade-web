@@ -14,8 +14,11 @@ import './styles.scss';
 import {
   createClient, deleteClient, getClientById, getClients, updateClient,
 } from '../../services/clientsService';
+import useToast from '../../hooks/useToast';
 
 function ClientsScreen() {
+  const toast = useToast();
+
   const [clientsResponse, setClientsResponse] = useState([]);
   const [clientsList, setClientsList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,23 +72,41 @@ function ClientsScreen() {
   };
 
   const handleUpdateClient = async (event) => {
-    event.preventDefault();
-    const updatedClient = { ...clientData };
-    delete updatedClient.id;
-    await updateClient(clientData.id, updatedClient);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      const updatedClient = { ...clientData };
+      delete updatedClient.id;
+      await updateClient(clientData.id, updatedClient);
+      toast.successToast('Cliente atualizado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao atualizar cliente', error);
+      toast.errorToast('Erro ao atualizar cliente');
+    }
   };
 
   const handleCreateClient = async (event) => {
-    event.preventDefault();
-    await createClient(clientData);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await createClient(clientData);
+      toast.successToast('Cliente cadastrado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao cadastrar cliente', error);
+      toast.errorToast('Erro ao cadastrar cliente');
+    }
   };
 
   const handleDeleteClient = async (event) => {
-    event.preventDefault();
-    await deleteClient(clientData.id);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await deleteClient(clientData.id);
+      toast.successToast('Cliente deletado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao deletar cliente', error);
+      toast.errorToast('Erro ao deletar cliente');
+    }
   };
 
   const openCreateClientModal = () => {
