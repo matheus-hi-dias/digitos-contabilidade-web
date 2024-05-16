@@ -10,6 +10,7 @@
   color: variables.$N000;
   height: 52px;
   border-radius: 8px;
+  padding: 8px;
   transition: all 0.3s ease-in-out;
   &:hover {
     background-color: darken(variables.$SECONDARY_COLOR, 10%);
