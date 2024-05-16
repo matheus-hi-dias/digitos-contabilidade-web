@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useErrors from '../../hooks/useErrors';
 import {
-  AddIcon, Button, List, ListItem, Modal, SearchInput,
+  AddIcon, Button, List, ListItem, Loading, Modal, SearchInput,
   TextInput,
 } from '../../components';
 import './styles.scss';
@@ -23,6 +23,7 @@ function DocumentsNatureScreen() {
   const [natureData, setNatureData] = useState({
     nature: '',
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const {
     setErrors,
@@ -33,6 +34,7 @@ function DocumentsNatureScreen() {
       const response = await getNatures();
       setDocumentNatureResponse(response);
       setDocumentNatureList(response);
+      setIsLoading(false);
     };
     fetchData();
   }, [isModalOpen]);
@@ -156,6 +158,15 @@ function DocumentsNatureScreen() {
       </>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="documentNatureLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="documentNatureLayout">

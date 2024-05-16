@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, SearchInput,
+  AddIcon, Button, List, ListItem, Loading, Modal, SearchInput,
   Select,
   TextInput,
 } from '../../components';
@@ -30,6 +30,7 @@ function UsersScreen() {
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [userData, setUserData] = useState({});
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +44,7 @@ function UsersScreen() {
   useEffect(() => {
     getRoles().then(setRoleList);
     getPermissions().then(setPermissionList);
+    setIsLoading(false);
   }, []);
 
   const handleSearch = (e) => {
@@ -360,7 +362,14 @@ function UsersScreen() {
       </>
     );
   };
-
+  if (isLoading) {
+    return (
+      <div className="usersLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
+  }
   return (
     <div className="usersLayout">
       <div className="usersSearchAddContainer">

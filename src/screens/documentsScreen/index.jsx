@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, SearchInput, Select,
+  AddIcon, Button, List, ListItem, Loading, Modal, SearchInput, Select,
   TextInput,
 } from '../../components';
 import './styles.scss';
@@ -335,7 +335,12 @@ function DocumentsScreen() {
   };
 
   if (isLoading) {
-    return <div className="documentsLayout">Loading...</div>;
+    return (
+      <div className="documentsLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
   }
 
   return (

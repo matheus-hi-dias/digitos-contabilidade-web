@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import './styles.scss';
-import { List, ListItem, TextInput } from '../../components';
+import {
+  List, ListItem, Loading, TextInput,
+} from '../../components';
 
 import permissions from '../../constants/permissions';
 import { getEmployeeProfile } from '../../services/myProfile';
@@ -31,7 +33,12 @@ function MyAreaScreen() {
   }, []);
 
   if (isLoading) {
-    return <div className="myAreaScreenLayout">Loading...</div>;
+    return (
+      <div className="myAreaScreenLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
   }
   return (
     <div className="myAreaScreenLayout">

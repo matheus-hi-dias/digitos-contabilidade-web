@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Modal, SearchInput,
+  AddIcon, Button, List, ListItem, Loading, Modal, SearchInput,
   TextInput,
 } from '../../components';
 import permissions from '../../constants/permissions';
@@ -29,8 +29,11 @@ function RolesScreen() {
 
   const [selectedPermissions, setSelectedPermissions] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     getPermissions().then(setPermissionList);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -288,6 +291,15 @@ function RolesScreen() {
       </>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="rolesLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="rolesLayout">

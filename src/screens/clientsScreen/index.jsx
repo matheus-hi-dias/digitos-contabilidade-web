@@ -4,6 +4,7 @@ import {
   Button,
   List,
   ListItem,
+  Loading,
   Modal,
   SearchInput,
   Select,
@@ -32,11 +33,14 @@ function ClientsScreen() {
     cpfCnpj: '',
   });
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await getClients();
       setClientsResponse(response);
       setClientsList(response);
+      setIsLoading(false);
     };
     fetchData();
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
@@ -270,6 +274,15 @@ function ClientsScreen() {
       </>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="clientsLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="clientsLayout">

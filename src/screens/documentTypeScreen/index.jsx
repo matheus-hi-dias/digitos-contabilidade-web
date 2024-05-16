@@ -5,6 +5,7 @@ import {
   Button,
   List,
   ListItem,
+  Loading,
   Modal,
   SearchInput,
   TextInput,
@@ -27,15 +28,18 @@ function DocumentTypeScreen() {
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [documentTypeData, setDocumentTypeData] = useState({
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!isModalOpen) {
+      console.log('fetching data');
       const fetchData = async () => {
         const response = await getDocumentTypes();
         setDocumentTypeResponse(response);
         setDocumentTypeList(response);
       };
       fetchData();
+      setIsLoading(false);
     }
   }, [isModalCreateOpen, isModalDeleteOpen, isModalUpdateOpen]);
 
@@ -210,6 +214,15 @@ function DocumentTypeScreen() {
       </>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="documentTypeLayout">
+        <Loading />
+        <p>Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="documentTypeLayout">
