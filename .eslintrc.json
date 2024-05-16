@@ -15,6 +15,7 @@
     "react/react-in-jsx-scope": "off",
     "consistent-return": "off",
     "import/no-cycle": "off",
+    "no-console": "off",
     "jsx-a11y/label-has-associated-control": [ 2, {
       "labelComponents": ["label"],
       "htmlFor": ["label"],
