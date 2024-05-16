@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './styles.scss';
 import {
+  Button,
   List, ListItem, Loading, TextInput,
 } from '../../components';
 
@@ -14,9 +15,16 @@ function MyAreaScreen() {
   const [myPermissions, setMyPermissions] = useState([]);
   const [rolePermissions, setRolePermissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      if (!isLoading) {
+        setIsLoading(true);
+      }
+      if (loadingError) {
+        setLoadingError(false);
+      }
       const response = await getEmployeeProfile();
       setMyData(response);
 
@@ -28,7 +36,12 @@ function MyAreaScreen() {
         : [];
       setRolePermissions(rolePermissionsResponse);
       setIsLoading(false);
-    };
+    } catch (error) {
+      setIsLoading(false);
+      setLoadingError(true);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -40,6 +53,16 @@ function MyAreaScreen() {
       </div>
     );
   }
+
+  if (loadingError) {
+    return (
+      <div className="usersLayout">
+        <h1>Erro ao carregar dados</h1>
+        <Button variant="primaryButton" text="Recarregar página" onClick={fetchData} />
+      </div>
+    );
+  }
+
   return (
     <div className="myAreaScreenLayout">
       <div className="myAreaScreenContent">

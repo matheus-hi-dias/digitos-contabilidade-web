@@ -31,20 +31,47 @@ function UsersScreen() {
   const [userData, setUserData] = useState({});
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      if (!isLoading) {
+        setIsLoading(true);
+      }
+      if (loadingError) {
+        setLoadingError(false);
+      }
       const response = await getEmployees();
       setUserResponse(response);
       setUserList(response);
-    };
-    fetchData();
+      const roles = await getRoles();
+      setRoleList(roles);
+      const permissionsResponse = await getPermissions();
+      setPermissionList(permissionsResponse);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setLoadingError(true);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      if (!isModalOpen) {
+        const fetchUsers = async () => {
+          const response = await getEmployees();
+          setUserResponse(response);
+          setUserList(response);
+        };
+        fetchUsers();
+      }
+    } catch (error) {
+      setLoadingError(true);
+    }
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
 
   useEffect(() => {
-    getRoles().then(setRoleList);
-    getPermissions().then(setPermissionList);
-    setIsLoading(false);
+    fetchData();
   }, []);
 
   const handleSearch = (e) => {
@@ -362,6 +389,7 @@ function UsersScreen() {
       </>
     );
   };
+
   if (isLoading) {
     return (
       <div className="usersLayout">
@@ -370,6 +398,16 @@ function UsersScreen() {
       </div>
     );
   }
+
+  if (loadingError) {
+    return (
+      <div className="usersLayout">
+        <h1>Erro ao carregar dados</h1>
+        <Button variant="primaryButton" text="Recarregar página" onClick={fetchData} />
+      </div>
+    );
+  }
+
   return (
     <div className="usersLayout">
       <div className="usersSearchAddContainer">

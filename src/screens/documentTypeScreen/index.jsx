@@ -29,17 +29,29 @@ function DocumentTypeScreen() {
   const [documentTypeData, setDocumentTypeData] = useState({
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      if (!isLoading) {
+        setIsLoading(true);
+      }
+      if (loadingError) {
+        setLoadingError(false);
+      }
+      const response = await getDocumentTypes();
+      setDocumentTypeResponse(response);
+      setDocumentTypeList(response);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setLoadingError(true);
+    }
+  };
 
   useEffect(() => {
     if (!isModalOpen) {
-      console.log('fetching data');
-      const fetchData = async () => {
-        const response = await getDocumentTypes();
-        setDocumentTypeResponse(response);
-        setDocumentTypeList(response);
-      };
       fetchData();
-      setIsLoading(false);
     }
   }, [isModalCreateOpen, isModalDeleteOpen, isModalUpdateOpen]);
 
@@ -220,6 +232,15 @@ function DocumentTypeScreen() {
       <div className="documentTypeLayout">
         <Loading />
         <p>Carregando...</p>
+      </div>
+    );
+  }
+
+  if (loadingError) {
+    return (
+      <div className="clientsLayout">
+        <h1>Erro ao carregar dados</h1>
+        <Button variant="primaryButton" text="Recarregar página" onClick={fetchData} />
       </div>
     );
   }

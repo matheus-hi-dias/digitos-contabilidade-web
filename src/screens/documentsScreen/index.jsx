@@ -44,6 +44,7 @@ function DocumentsScreen() {
   const [selectedClients, setSelectedClients] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
   const firstRender = useRef(true);
 
   const handleFilters = (documentTypesFilter, clientsFilter, search) => {
@@ -84,8 +85,14 @@ function DocumentsScreen() {
     handleFilters(selectedDocumentTypes, newSelection, searchText);
   };
 
-  useEffect(() => {
-    const loadData = async () => {
+  const loadData = async () => {
+    try {
+      if (!isLoading) {
+        setIsLoading(true);
+      }
+      if (loadingError) {
+        setLoadingError(false);
+      }
       const documents = await getDocuments();
       setDocumentsResponse(documents);
       setDocumentsList(documents);
@@ -95,20 +102,27 @@ function DocumentsScreen() {
       setDocumentLocalList(await getDocumentStorageLocal());
       setIsLoading(false);
       firstRender.current = false;
-    };
+    } catch (error) {
+      setIsLoading(false);
+      setLoadingError(true);
+    }
+  };
+  useEffect(() => {
     loadData();
   }, []);
 
   useEffect(() => {
-    console.log('firstRender', firstRender.current);
-    console.log('isModalOpen', isModalOpen);
-    if (!isModalOpen && !firstRender.current) {
-      const fetchData = async () => {
-        const documents = await getDocuments();
-        setDocumentsResponse(documents);
-        setDocumentsList(documents);
-      };
-      fetchData();
+    try {
+      if (!isModalOpen && !firstRender.current) {
+        const fetchData = async () => {
+          const documents = await getDocuments();
+          setDocumentsResponse(documents);
+          setDocumentsList(documents);
+        };
+        fetchData();
+      }
+    } catch (error) {
+      setLoadingError(true);
     }
   }, [isModalCreateOpen, isModalDeleteOpen, isModalUpdateOpen]);
 
@@ -339,6 +353,15 @@ function DocumentsScreen() {
       <div className="documentsLayout">
         <Loading />
         <p>Carregando...</p>
+      </div>
+    );
+  }
+
+  if (loadingError) {
+    return (
+      <div className="documentsLayout">
+        <h1>Erro ao carregar dados</h1>
+        <Button variant="primaryButton" text="Recarregar página" onClick={loadData} />
       </div>
     );
   }

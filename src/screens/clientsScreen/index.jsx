@@ -34,14 +34,27 @@ function ClientsScreen() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      if (!isLoading) {
+        setIsLoading(true);
+      }
+      if (loadingError) {
+        setLoadingError(false);
+      }
       const response = await getClients();
       setClientsResponse(response);
       setClientsList(response);
       setIsLoading(false);
-    };
+    } catch (error) {
+      setIsLoading(false);
+      setLoadingError(true);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [isModalCreateOpen, isModalUpdateOpen, isModalDeleteOpen]);
 
@@ -280,6 +293,15 @@ function ClientsScreen() {
       <div className="clientsLayout">
         <Loading />
         <p>Carregando...</p>
+      </div>
+    );
+  }
+
+  if (loadingError) {
+    return (
+      <div className="clientsLayout">
+        <h1>Erro ao carregar dados</h1>
+        <Button variant="primaryButton" text="Recarregar página" onClick={fetchData} />
       </div>
     );
   }

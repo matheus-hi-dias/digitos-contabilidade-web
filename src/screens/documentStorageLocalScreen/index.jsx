@@ -14,11 +14,29 @@ function DocumentStorageLocalScreen() {
 
   const [selectedNature, setSelectedNature] = useState('');
   const [documentNatureList, setDocumentNatureList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [local, setLocal] = useState('');
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      if (!isLoading) {
+        setIsLoading(true);
+      }
+      if (loadingError) {
+        setLoadingError(false);
+      }
+      const response = await getNatures();
+      setDocumentNatureList(response);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setLoadingError(true);
+    }
+  };
   useEffect(() => {
-    getNatures().then(setDocumentNatureList).then(() => setIsLoading(false));
+    fetchData();
   }, []);
 
   const handleNatureChange = (event) => {
@@ -68,6 +86,15 @@ function DocumentStorageLocalScreen() {
       <div className="documentStorageLocalScreen">
         <Loading />
         <p>Carregando...</p>
+      </div>
+    );
+  }
+
+  if (loadingError) {
+    return (
+      <div className="documentStorageLocalScreen">
+        <h1>Erro ao carregar dados</h1>
+        <Button variant="primaryButton" text="Recarregar página" onClick={fetchData} />
       </div>
     );
   }
