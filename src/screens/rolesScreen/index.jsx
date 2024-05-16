@@ -92,6 +92,19 @@ function RolesScreen() {
     }));
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message.toLowerCase() === 'role is required') {
+      toast.errorToast('Campo cargo é obrigatório');
+      return;
+    }
+    if (error.response.data.message.toLowerCase() === 'role already exists') {
+      toast.errorToast('Cargo já cadastrado');
+      return;
+    }
+
+    toast.errorToast(defaultMessage);
+  };
+
   const handleCreateRole = async (event) => {
     try {
       event.preventDefault();
@@ -106,7 +119,7 @@ function RolesScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao cadastrar cargo', error);
-      toast.errorToast('Erro ao cadastrar cargo');
+      handleErrorToast(error, 'Erro ao cadastrar cargo');
     }
   };
 
@@ -123,7 +136,7 @@ function RolesScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao atualizar cargo', error);
-      toast.errorToast('Erro ao atualizar cargo');
+      handleErrorToast(error, 'Erro ao atualizar cargo');
     }
   };
 
@@ -135,7 +148,7 @@ function RolesScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao deletar cargo', error);
-      toast.errorToast('Erro ao deletar cargo');
+      handleErrorToast(error, 'Erro ao deletar cargo');
     }
   };
 

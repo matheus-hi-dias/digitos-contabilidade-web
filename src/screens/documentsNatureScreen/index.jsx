@@ -67,6 +67,13 @@ function DocumentsNatureScreen() {
     }
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message.toLowerCase() === 'nature already exists') {
+      return toast.errorToast('Natureza já cadastrada');
+    }
+    toast.errorToast(defaultMessage);
+  };
+
   const handleCreateNature = async (event) => {
     try {
       event.preventDefault();
@@ -75,7 +82,7 @@ function DocumentsNatureScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao cadastrar natureza', error);
-      toast.errorToast('Erro ao cadastrar natureza');
+      handleErrorToast(error, 'Erro ao cadastrar natureza');
     }
   };
 
@@ -87,7 +94,7 @@ function DocumentsNatureScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao atualizar natureza', error);
-      toast.errorToast('Erro ao atualizar natureza');
+      handleErrorToast(error, 'Erro ao atualizar natureza');
     }
   };
 
@@ -99,7 +106,7 @@ function DocumentsNatureScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao deletar natureza', error);
-      toast.errorToast('Erro ao deletar natureza');
+      handleErrorToast(error, 'Erro ao deletar natureza');
     }
   };
 

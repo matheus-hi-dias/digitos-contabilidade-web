@@ -71,6 +71,18 @@ function ClientsScreen() {
     }));
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message === 'cpfCnpj already in use' && clientData.personType === 'F') {
+      toast.errorToast('CPF já cadastrado');
+      return;
+    }
+    if (error.response.data.message === 'cpfCnpj already in use' && clientData.personType === 'J') {
+      toast.errorToast('CNPJ já cadastrado');
+      return;
+    }
+    toast.errorToast(defaultMessage);
+  };
+
   const handleUpdateClient = async (event) => {
     try {
       event.preventDefault();
@@ -81,7 +93,7 @@ function ClientsScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao atualizar cliente', error);
-      toast.errorToast('Erro ao atualizar cliente');
+      handleErrorToast(error, 'Erro ao atualizar cliente');
     }
   };
 
@@ -93,7 +105,7 @@ function ClientsScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao cadastrar cliente', error);
-      toast.errorToast('Erro ao cadastrar cliente');
+      handleErrorToast(error, 'Erro ao cadastrar cliente');
     }
   };
 
@@ -105,7 +117,7 @@ function ClientsScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao deletar cliente', error);
-      toast.errorToast('Erro ao deletar cliente');
+      handleErrorToast(error, 'Erro ao deletar cliente');
     }
   };
 

@@ -14,8 +14,11 @@ import { setEmptyValues } from '../../utils';
 import getPermissions from '../../services/permissions';
 import { getPermissionsByEmployeeId } from '../../services/employeesPermission';
 import permissions from '../../constants/permissions';
+import useToast from '../../hooks/useToast';
 
 function UsersScreen() {
+  const toast = useToast();
+
   const [userResponse, setUserResponse] = useState([]);
   const [userList, setUserList] = useState([]);
   const [roleList, setRoleList] = useState([]);
@@ -116,37 +119,65 @@ function UsersScreen() {
     }
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message.toLowerCase() === 'email already in use') {
+      toast.errorToast('Email já está em uso');
+      return;
+    }
+    if (error.response.data.message.toLowerCase() === 'username already in use') {
+      toast.errorToast('Nome de usuário já está em uso');
+      return;
+    }
+    toast.errorToast(defaultMessage);
+  };
+
   const handleCreateEmployee = async (event) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    const data = {
-      ...userData,
-      permissions: selectedPermissions,
-    };
-    await createEmployee(data);
-
-    handleCloseModal();
+      const data = {
+        ...userData,
+        permissions: selectedPermissions,
+      };
+      await createEmployee(data);
+      toast.successToast('Usuário cadastrado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao cadastrar usuário', error);
+      handleErrorToast(error, 'Erro ao cadastrar usuário');
+    }
   };
 
   const handleUpdateEmployee = async (event) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    const data = {
-      ...userData,
-      role_id: userData.role != null ? userData.role.id : null,
-      permissions: selectedPermissions,
-    };
-    delete data.role;
+      const data = {
+        ...userData,
+        role_id: userData.role != null ? userData.role.id : null,
+        permissions: selectedPermissions,
+      };
+      delete data.role;
 
-    await updateEmployee(userData.id, data);
-
-    handleCloseModal();
+      await updateEmployee(userData.id, data);
+      toast.successToast('Usuário atualizado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao atualizar usuário', error);
+      handleErrorToast(error, 'Erro ao atualizar usuário');
+    }
   };
 
   const handleDeleteEmployee = async (event) => {
-    event.preventDefault();
-    await deleteEmployee(userData.id);
-    handleCloseModal();
+    try {
+      event.preventDefault();
+      await deleteEmployee(userData.id);
+      toast.successToast('Usuário deletado com sucesso!');
+      handleCloseModal();
+    } catch (error) {
+      console.error('Erro ao deletar usuário', error);
+      handleErrorToast(error, 'Erro ao deletar usuário');
+    }
   };
 
   const openCreateUserModal = () => {

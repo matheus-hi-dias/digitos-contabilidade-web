@@ -137,6 +137,30 @@ function DocumentsScreen() {
     }));
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message.toLowerCase === 'document code already in use') {
+      toast.errorToast('Código de documento já em uso');
+      return;
+    }
+    if (error.response.data.message.toLowerCase === 'document not found') {
+      toast.errorToast('Documento não encontrado');
+      return;
+    }
+    if (error.response.data.message.toLowerCase === 'nature not found') {
+      toast.errorToast('Natureza não encontrada');
+      return;
+    }
+    if (error.response.data.message.toLowerCase === 'location not found') {
+      toast.errorToast('Local não encontrado');
+      return;
+    }
+    if (error.response.data.message.toLowerCase === 'type not found') {
+      toast.errorToast('Tipo não encontrado');
+      return;
+    }
+    toast.errorToast(defaultMessage);
+  };
+
   const handleCreateDocument = async (event) => {
     try {
       event.preventDefault();
@@ -145,7 +169,7 @@ function DocumentsScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao criar documento', error);
-      toast.errorToast('Erro ao criar documento');
+      handleErrorToast(error, 'Erro ao criar documento');
     }
   };
 
@@ -157,7 +181,7 @@ function DocumentsScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao atualizar documento', error);
-      toast.errorToast('Erro ao atualizar documento');
+      handleErrorToast(error, 'Erro ao atualizar documento');
     }
   };
 
@@ -169,7 +193,7 @@ function DocumentsScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao deletar documento', error);
-      toast.errorToast('Erro ao deletar documento');
+      handleErrorToast(error, 'Erro ao deletar documento');
     }
   };
 

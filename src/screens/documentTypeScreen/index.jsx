@@ -63,6 +63,18 @@ function DocumentTypeScreen() {
     }));
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message.toLowerCase() === 'document type already exists') {
+      toast.errorToast('Tipo de documento já cadastrado');
+      return;
+    }
+    if (error.response.data.message.toLowerCase() === 'type not found') {
+      toast.errorToast('Tipo de documento não encontrado');
+      return;
+    }
+    toast.errorToast(defaultMessage);
+  };
+
   const handleCreateAction = async (event) => {
     try {
       event.preventDefault();
@@ -71,7 +83,7 @@ function DocumentTypeScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao cadastrar tipo de documento', error);
-      toast.errorToast('Erro ao cadastrar tipo de documento');
+      handleErrorToast(error, 'Erro ao cadastrar tipo de documento');
     }
   };
 
@@ -83,7 +95,7 @@ function DocumentTypeScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao atualizar tipo de documento', error);
-      toast.errorToast('Erro ao atualizar tipo de documento');
+      handleErrorToast(error, 'Erro ao atualizar tipo de documento');
     }
   };
 
@@ -95,7 +107,7 @@ function DocumentTypeScreen() {
       handleCloseModal();
     } catch (error) {
       console.error('Erro ao deletar tipo de documento', error);
-      toast.errorToast('Erro ao deletar tipo de documento');
+      handleErrorToast(error, 'Erro ao deletar tipo de documento');
     }
   };
 

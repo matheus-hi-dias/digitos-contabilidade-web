@@ -29,6 +29,22 @@ function DocumentStorageLocalScreen() {
     setLocal('');
   };
 
+  const handleErrorToast = (error, defaultMessage) => {
+    if (error.response.data.message.toLowerCase() === 'document local already exists') {
+      toast.errorToast('Local já cadastrado');
+      return;
+    }
+    if (error.response.data.message.toLowerCase() === 'nature not found') {
+      toast.errorToast('Natureza não encontrada');
+      return;
+    }
+    if (error.response.data.message.toLowerCase() === 'local not found') {
+      toast.errorToast('Local não encontrado');
+      return;
+    }
+    toast.errorToast(defaultMessage);
+  };
+
   const handleCreateLocal = async () => {
     try {
       const data = {
@@ -41,7 +57,7 @@ function DocumentStorageLocalScreen() {
       handleClearFields();
     } catch (error) {
       console.error('Erro ao cadastrar local', error);
-      toast.errorToast('Erro ao cadastrar local');
+      handleErrorToast(error, 'Erro ao cadastrar local');
     }
   };
 
