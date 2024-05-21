@@ -1,23 +1,56 @@
 // UserContext.js
 import React, {
-  createContext, useContext, useState, useEffect,
+  createContext, useState, useEffect,
+  useMemo,
 } from 'react';
+import { getEmployeeProfile } from '../services/myProfile';
+import { getPermissionsByEmployeeId } from '../services/employeesPermission';
+import { getPermissionByRoleId } from '../services/rolesPermission';
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
-export function UserProvider({ children }) {
+export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const fetchUserData = async () => {
+    try {
+      if (!loading) {
+        setLoading(true);
+      }
+      if (error) {
+        setError(false);
+      }
+      const userResponse = await getEmployeeProfile();
+      const myPermissionsResponse = await getPermissionsByEmployeeId(userResponse.id);
+      const rolePermissionsResponse = userResponse.role?.id
+        ? await getPermissionByRoleId(userResponse.role.id)
+        : [];
+
+      setUser({
+        ...userResponse,
+        rolePermissions: rolePermissionsResponse,
+        permissions: myPermissionsResponse,
+      });
+    } catch (err) {
+      console.log(err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const storedToken = JSON.parse(localStorage.getItem('session'));
     if (storedToken) {
-      setUser(storedToken);
+      fetchUserData();
     }
   }, []);
 
   const login = (userToken) => {
-    setUser(userToken);
     localStorage.setItem('session', JSON.stringify(userToken));
+    fetchUserData();
   };
 
   const logout = () => {
@@ -25,12 +58,15 @@ export function UserProvider({ children }) {
     localStorage.removeItem('session');
   };
 
+  const value = useMemo(() => ({
+    loading, error, user, login, logout,
+  }), [user, loading, error]);
+  console.log({ value });
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
 }
 
-export const useUser = () => useContext(UserContext);
+// export const useUser = () => useContext(UserContext);

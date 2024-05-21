@@ -9,8 +9,10 @@ import permissions from '../../constants/permissions';
 import { getEmployeeProfile } from '../../services/myProfile';
 import { getPermissionsByEmployeeId } from '../../services/employeesPermission';
 import { getPermissionByRoleId } from '../../services/rolesPermission';
+import useUser from '../../hooks/useUser';
 
 function MyAreaScreen() {
+  const user = useUser();
   const [myData, setMyData] = useState({});
   const [myPermissions, setMyPermissions] = useState([]);
   const [rolePermissions, setRolePermissions] = useState([]);
@@ -44,6 +46,10 @@ function MyAreaScreen() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log('userContext', user);
+  }, [user.loading]);
 
   if (isLoading) {
     return (

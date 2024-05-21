@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
-import { createContext, useReducer } from 'react';
+import { createContext, useMemo, useReducer } from 'react';
 import toastReducer from '../reducers/toastReducer';
 import ToastsContainer from '../components/ToastsContainer';
 
@@ -29,7 +28,7 @@ export function ToastContextProvider({ children }) {
     dispatch({ type: 'DELETE_TOAST', payload: id });
   };
 
-  const value = { successToast, errorToast, removeToast };
+  const value = useMemo(() => ({ successToast, errorToast, removeToast }), [state.toasts]);
   return (
     <ToastContext.Provider value={value}>
       <ToastsContainer toasts={state.toasts} />
