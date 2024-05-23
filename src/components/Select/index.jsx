@@ -3,10 +3,10 @@ import React from 'react';
 import './styles.scss';
 
 function Select({
-  label, options, className = '', optionKey, optionLabels, onChange, ...rest
+  label, options, className = '', optionKey, optionLabels, onChange, error, errorMessage, ...rest
 }) {
   return (
-    <div className={`selectClass ${className}`}>
+    <div className={`selectClass ${className} ${error && 'fieldWithError'}`}>
       {label && <label>{label}</label>}
       <select onChange={onChange} {...rest}>
         {options?.map((option) => (
@@ -18,6 +18,11 @@ function Select({
           </option>
         ))}
       </select>
+      {error && (
+        <div className="errorMessage">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }

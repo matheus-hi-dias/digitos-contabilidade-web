@@ -1,16 +1,35 @@
 @use '../../styles/variables';
 
-select {
-  background-color: rgba(variables.$N300, 0.6);
-  border: none;
-  box-shadow: 0px 4px 4px rgba(variables.$N900, 0.25);
-  outline: none;
-  border-radius: 8px;
-  color: variables.$N900;
-  padding: 8px;
-  height: 45px;
+.selectClass {
+  height: 53px;
+  // margin-bottom: 8px;
 
-  option {
+  select {
+    background-color: rgba(variables.$N300, 0.6);
+    border: 1px solid rgba(variables.$N300, 0.6);
+    box-shadow: 0px 4px 4px rgba(variables.$N900, 0.25);
+    outline: none;
+    border-radius: 8px;
     color: variables.$N900;
+    padding: 8px;
+    height: 42px;
+
+
+    option {
+      color: variables.$N900;
+    }
   }
+
+}
+
+.selectWithError {
+  input {
+    background-color: variables.$DANGER_LIGHT !important;
+    border: 1px solid variables.$DANGER_DARK !important;
+  }
+}
+
+.errorMessage {
+  color: variables.$DANGER_DARK;
+  font-size: variables.$FONT-XSMALL;
 }
