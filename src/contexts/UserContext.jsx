@@ -10,7 +10,7 @@ import { getPermissionByRoleId } from '../services/rolesPermission';
 export const UserContext = createContext();
 
 export function UserContextProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -28,13 +28,14 @@ export function UserContextProvider({ children }) {
         ? await getPermissionByRoleId(userResponse.role.id)
         : [];
 
-      setUser({
+      setData({
         ...userResponse,
         rolePermissions: rolePermissionsResponse,
         permissions: myPermissionsResponse,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      setData(err);
       setError(true);
     } finally {
       setLoading(false);
@@ -54,13 +55,13 @@ export function UserContextProvider({ children }) {
   };
 
   const logout = () => {
-    setUser(null);
+    setData(null);
     localStorage.removeItem('session');
   };
 
   const value = useMemo(() => ({
-    loading, error, user, login, logout,
-  }), [user, loading, error]);
+    loading, error, data, login, logout,
+  }), [data, loading, error]);
   console.log({ value });
   return (
     <UserContext.Provider value={value}>
