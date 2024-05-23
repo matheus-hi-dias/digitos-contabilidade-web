@@ -11,12 +11,12 @@ function TextInput({
   };
   return (
     <div className={`${styleClass[variant]} ${customClass || ''} ${error && 'fieldWithError'}`}>
-      <input type={type} placeholder={placeholder} className="inputSearch" data-testid="search-input" {...rest} />
+      <input type={type} placeholder={placeholder} data-testid="search-input" {...rest} />
       {icon && icon}
       {error && (
-        <span className="errorMessage">
+        <div className="errorMessage">
           {errorMessage}
-        </span>
+        </div>
       )}
     </div>
   );
