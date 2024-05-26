@@ -6,7 +6,7 @@ export const api = axios.create({
 
 export const getToken = () => {
   const sessionData = localStorage.getItem('session');
-  return JSON.parse(sessionData).token;
+  return JSON.parse(sessionData);
 };
 
 export const configHeader = () => ({

@@ -1,25 +1,58 @@
 import { NavLink } from 'react-router-dom';
 import './styles.scss';
+import useUser from '../../hooks/useUser';
 
 export default function SideBar() {
+  const { data } = useUser();
   const activeRouteStyle = 'linkTextStyle activeRoute';
   const inactiveRouteStyle = 'linkTextStyle';
+
+  const routePermissions = {
+    '/minha-area': [],
+    '/documentos': ['SEE_DOCUMENTS'],
+    '/clientes': ['SEE_CLIENTS'],
+    '/tipo-de-documento': ['SEE_DOCUMENT_TYPES'],
+    '/natureza': ['SEE_DOCUMENT_NATURES'],
+    '/local-do-documento': ['SEE_DOCUMENT_LOCATION'],
+    '/usuarios': ['SEE_USERS'],
+    '/cargos': ['SEE_USERS'],
+  };
+
+  const hasRequiredPermissions = (requiredPermissions) => {
+    const userPermissions = [
+      ...data.permissions, ...data.rolePermissions,
+    ];
+
+    return requiredPermissions.every((permission) => userPermissions.includes(permission));
+  };
+
+  const renderNavLink = (to, text) => {
+    const requiredPermissions = routePermissions[to];
+
+    if (requiredPermissions.length === 0 || hasRequiredPermissions(requiredPermissions)) {
+      return (
+        <NavLink
+          to={to}
+          className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}
+        >
+          {text}
+        </NavLink>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="sideBarContainer">
-      <NavLink
-        to="/minha-area"
-        className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}
-      >
-        Minha Área
-      </NavLink>
-
-      <NavLink to="/documentos" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Documentos</NavLink>
-      <NavLink to="/clientes" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Clientes</NavLink>
-      <NavLink to="/tipo-de-documento" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Tipo de Documento</NavLink>
-      <NavLink to="/natureza" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Natureza</NavLink>
-      <NavLink to="/local-do-documento" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Local do Documento</NavLink>
-      <NavLink to="/usuarios" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Usuários</NavLink>
-      <NavLink to="/cargos" className={({ isActive }) => (isActive ? activeRouteStyle : inactiveRouteStyle)}>Cargos</NavLink>
+      {renderNavLink('/minha-area', 'Minha Área')}
+      {renderNavLink('/documentos', 'Documentos')}
+      {renderNavLink('/clientes', 'Clientes')}
+      {renderNavLink('/tipo-de-documento', 'Tipo de Documento')}
+      {renderNavLink('/natureza', 'Natureza')}
+      {renderNavLink('/local-do-documento', 'Local do Documento')}
+      {renderNavLink('/usuarios', 'Usuários')}
+      {renderNavLink('/cargos', 'Cargos')}
 
     </div>
   );

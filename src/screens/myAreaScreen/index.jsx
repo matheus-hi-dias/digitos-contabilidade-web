@@ -1,57 +1,17 @@
-import { useEffect, useState } from 'react';
 import './styles.scss';
 import {
   Button,
   List, ListItem, Loading, TextInput,
 } from '../../components';
-
 import permissions from '../../constants/permissions';
-import { getEmployeeProfile } from '../../services/myProfile';
-import { getPermissionsByEmployeeId } from '../../services/employeesPermission';
-import { getPermissionByRoleId } from '../../services/rolesPermission';
 import useUser from '../../hooks/useUser';
 
 function MyAreaScreen() {
-  const user = useUser();
-  const [myData, setMyData] = useState({});
-  const [myPermissions, setMyPermissions] = useState([]);
-  const [rolePermissions, setRolePermissions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadingError, setLoadingError] = useState(false);
+  const {
+    data: userData, loading, error, fetchUserData,
+  } = useUser();
 
-  const fetchData = async () => {
-    try {
-      if (!isLoading) {
-        setIsLoading(true);
-      }
-      if (loadingError) {
-        setLoadingError(false);
-      }
-      const response = await getEmployeeProfile();
-      setMyData(response);
-
-      const myPermissionsResponse = await getPermissionsByEmployeeId(response.id);
-      setMyPermissions(myPermissionsResponse);
-
-      const rolePermissionsResponse = response.role?.id
-        ? await getPermissionByRoleId(response.role.id)
-        : [];
-      setRolePermissions(rolePermissionsResponse);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setLoadingError(true);
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    console.log('userContext', user);
-  }, [user.loading]);
-
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="myAreaScreenLayout">
         <Loading />
@@ -60,39 +20,43 @@ function MyAreaScreen() {
     );
   }
 
-  if (loadingError) {
+  if (error) {
     return (
       <div className="usersLayout">
         <h1>Erro ao carregar dados</h1>
-        <Button variant="primaryButton" text="Recarregar página" onClick={fetchData} />
+        <Button variant="primaryButton" text="Recarregar página" onClick={fetchUserData} />
       </div>
     );
   }
 
+  const {
+    name, role, rolePermissions, permissions: myPermissions,
+  } = userData;
+
   return (
     <div className="myAreaScreenLayout">
       <div className="myAreaScreenContent">
-        <h1 className="myAreaTitle">{myData.name}</h1>
+        <h1 className="myAreaTitle">{name}</h1>
         <label>
           Cargo:
-          <TextInput variant="formField" type="text" disabled value={myData.role?.role || ''} />
+          <TextInput variant="formField" type="text" disabled value={role?.role || ''} />
         </label>
         <div className="permissionsDiv">
           Permissões:
           <List containerClassName="myPermissionsListContainer">
-            {rolePermissions.map((permission) => (
+            {rolePermissions.length > 0 && rolePermissions.map((permission) => (
               <ListItem
                 key={permission.id}
-                description={`${myData.role.role} - ${permissions[permission.permission]}`}
+                description={`${role.role} - ${permissions[permission]}`}
                 seeButton={false}
                 updateButton={false}
                 deleteButton={false}
               />
             ))}
-            {myPermissions.map((permission) => (
+            {myPermissions.length > 0 && myPermissions.map((permission) => (
               <ListItem
                 key={permission.id}
-                description={`${myData.name} - ${permissions[permission.permission]}`}
+                description={`${name} - ${permissions[permission]}`}
               />
             ))}
           </List>

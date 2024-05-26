@@ -30,11 +30,11 @@ export function UserContextProvider({ children }) {
 
       setData({
         ...userResponse,
-        rolePermissions: rolePermissionsResponse,
-        permissions: myPermissionsResponse,
+        rolePermissions: rolePermissionsResponse.map((perm) => perm.permission),
+        permissions: myPermissionsResponse.map((perm) => perm.permission),
       });
     } catch (err) {
-      console.error(err);
+      console.error('error', err);
       setData(err);
       setError(true);
     } finally {
@@ -44,7 +44,7 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     const storedToken = JSON.parse(localStorage.getItem('session'));
-    if (storedToken) {
+    if (storedToken && data === null) {
       fetchUserData();
     }
   }, []);
@@ -62,12 +62,9 @@ export function UserContextProvider({ children }) {
   const value = useMemo(() => ({
     loading, error, data, login, logout,
   }), [data, loading, error]);
-  console.log({ value });
   return (
     <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
 }
-
-// export const useUser = () => useContext(UserContext);

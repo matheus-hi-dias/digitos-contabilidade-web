@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { Button, FaUser, TextInput } from '../../components';
 import './styles.scss';
+import useUser from '../../hooks/useUser';
 
 function LoginScreen() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { login: loginUser } = useUser();
 
   const navigate = useNavigate();
 
@@ -28,8 +30,8 @@ function LoginScreen() {
 
     api.post('/auth/login', { login, password }).then((response) => {
       const { token } = response.data;
-      localStorage.setItem('session', JSON.stringify(response.data));
       if (token) {
+        loginUser(token);
         navigate('/minha-area');
       }
     }).catch((err) => {
