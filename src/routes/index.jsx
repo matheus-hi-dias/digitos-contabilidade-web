@@ -29,7 +29,7 @@ function PrivateRoute({ children, requiredPermissions }) {
     return children;
   }
 
-  const userPermissions = [...data.permissions, ...data.rolePermissions];
+  const userPermissions = [...(data.permissions || []), ...(data.rolePermissions || [])];
   const hasRequiredPermissions = requiredPermissions
     .every((permission) => userPermissions.includes(permission));
 
@@ -130,6 +130,7 @@ function NonAuthenticatedRoutes() {
 
 export default function getRoutes() {
   const { isLoggedIn, loading } = useUser();
+  console.log('isLoggedIn, isLoading', isLoggedIn, loading);
 
   if (loading) {
     return [

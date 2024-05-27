@@ -19,9 +19,7 @@ export default function SideBar() {
   };
 
   const hasRequiredPermissions = (requiredPermissions) => {
-    const userPermissions = [
-      ...data.permissions, ...data.rolePermissions,
-    ];
+    const userPermissions = [...(data.permissions || []), ...(data.rolePermissions || [])];
 
     return requiredPermissions.every((permission) => userPermissions.includes(permission));
   };
