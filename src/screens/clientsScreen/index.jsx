@@ -4,7 +4,6 @@ import {
   Button,
   List,
   ListItem,
-  Loading,
   Modal,
   SearchInput,
   Select,
@@ -16,6 +15,7 @@ import {
   createClient, deleteClient, getClientById, getClients, updateClient,
 } from '../../services/clientsService';
 import useToast from '../../hooks/useToast';
+import LoadingScreen from '../LoadingScreen';
 
 function ClientsScreen() {
   const toast = useToast();
@@ -290,10 +290,7 @@ function ClientsScreen() {
 
   if (isLoading) {
     return (
-      <div className="clientsLayout">
-        <Loading />
-        <p>Carregando...</p>
-      </div>
+      <LoadingScreen />
     );
   }
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useErrors from '../../hooks/useErrors';
 import {
-  AddIcon, Button, List, ListItem, Loading, Modal, SearchInput,
+  AddIcon, Button, List, ListItem, Modal, SearchInput,
   TextInput,
 } from '../../components';
 import './styles.scss';
@@ -10,6 +10,7 @@ import {
   createNature, deleteNature, getNatureById, getNatures, updateNature,
 } from '../../services/documentsNature';
 import useToast from '../../hooks/useToast';
+import LoadingScreen from '../LoadingScreen';
 
 function DocumentsNatureScreen() {
   const toast = useToast();
@@ -174,10 +175,7 @@ function DocumentsNatureScreen() {
 
   if (isLoading) {
     return (
-      <div className="documentNatureLayout">
-        <Loading />
-        <p>Carregando...</p>
-      </div>
+      <LoadingScreen />
     );
   }
 

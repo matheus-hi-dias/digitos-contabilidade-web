@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import {
-  Button, Loading, Select, TextInput,
+  Button, Select, TextInput,
 } from '../../components';
+import LoadingScreen from '../LoadingScreen';
+
 import './styles.scss';
 
 import { getNatures } from '../../services/documentsNature';
@@ -83,10 +85,7 @@ function DocumentStorageLocalScreen() {
 
   if (isLoading) {
     return (
-      <div className="documentStorageLocalScreen">
-        <Loading />
-        <p>Carregando...</p>
-      </div>
+      <LoadingScreen />
     );
   }
 

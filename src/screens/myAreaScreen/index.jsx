@@ -1,10 +1,11 @@
 import './styles.scss';
 import {
   Button,
-  List, ListItem, Loading, TextInput,
+  List, ListItem, TextInput,
 } from '../../components';
 import permissions from '../../constants/permissions';
 import useUser from '../../hooks/useUser';
+import LoadingScreen from '../LoadingScreen';
 
 function MyAreaScreen() {
   const {
@@ -13,10 +14,7 @@ function MyAreaScreen() {
 
   if (loading) {
     return (
-      <div className="myAreaScreenLayout">
-        <Loading />
-        <p>Carregando...</p>
-      </div>
+      <LoadingScreen />
     );
   }
 

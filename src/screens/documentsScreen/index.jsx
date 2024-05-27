@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  AddIcon, Button, List, ListItem, Loading, Modal, SearchInput, Select,
+  AddIcon, Button, List, ListItem, Modal, SearchInput, Select,
   TextInput,
 } from '../../components';
 import './styles.scss';
@@ -15,6 +15,7 @@ import { getClients } from '../../services/clientsService';
 import { getNatures } from '../../services/documentsNature';
 import { getDocumentStorageLocal } from '../../services/documentsStorageLocal';
 import useToast from '../../hooks/useToast';
+import LoadingScreen from '../LoadingScreen';
 
 function DocumentsScreen() {
   const toast = useToast();
@@ -350,10 +351,7 @@ function DocumentsScreen() {
 
   if (isLoading) {
     return (
-      <div className="documentsLayout">
-        <Loading />
-        <p>Carregando...</p>
-      </div>
+      <LoadingScreen />
     );
   }
 

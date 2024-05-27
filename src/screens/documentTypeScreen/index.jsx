@@ -5,11 +5,12 @@ import {
   Button,
   List,
   ListItem,
-  Loading,
   Modal,
   SearchInput,
   TextInput,
 } from '../../components';
+import LoadingScreen from '../LoadingScreen';
+
 import './styles.scss';
 import {
   createDocumentType, deleteDocumentType, getDocumentTypeById, getDocumentTypes, updateDocumentType,
@@ -229,10 +230,7 @@ function DocumentTypeScreen() {
 
   if (isLoading) {
     return (
-      <div className="documentTypeLayout">
-        <Loading />
-        <p>Carregando...</p>
-      </div>
+      <LoadingScreen />
     );
   }
 
