@@ -6,7 +6,7 @@ export default function LoadingScreen() {
   return (
     <div className="loadingLayout">
       <Loading />
-      Loading...
+      Carregando...
     </div>
   );
 }
