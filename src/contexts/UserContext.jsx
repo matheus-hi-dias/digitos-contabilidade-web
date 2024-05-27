@@ -63,7 +63,7 @@ export function UserContextProvider({ children }) {
   };
 
   const value = useMemo(() => ({
-    loading, error, data, isLoggedIn, login, logout,
+    loading, error, data, isLoggedIn, login, logout, fetchUserData,
   }), [data, loading, error]);
   return (
     <UserContext.Provider value={value}>

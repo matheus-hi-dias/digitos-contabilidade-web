@@ -130,7 +130,6 @@ function NonAuthenticatedRoutes() {
 
 export default function getRoutes() {
   const { isLoggedIn, loading } = useUser();
-  console.log('isLoggedIn, isLoading', isLoggedIn, loading);
 
   if (loading) {
     return [
