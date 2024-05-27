@@ -13,6 +13,7 @@ export function UserContextProvider({ children }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const fetchUserData = async () => {
     try {
@@ -45,12 +46,14 @@ export function UserContextProvider({ children }) {
   useEffect(() => {
     const storedToken = JSON.parse(localStorage.getItem('session'));
     if (storedToken && data === null) {
+      setIsLoggedIn(true);
       fetchUserData();
     }
   }, []);
 
   const login = (userToken) => {
     localStorage.setItem('session', JSON.stringify(userToken));
+    setIsLoggedIn(true);
     fetchUserData();
   };
 
@@ -60,7 +63,7 @@ export function UserContextProvider({ children }) {
   };
 
   const value = useMemo(() => ({
-    loading, error, data, login, logout,
+    loading, error, data, isLoggedIn, login, logout,
   }), [data, loading, error]);
   return (
     <UserContext.Provider value={value}>

@@ -5,7 +5,6 @@ import './App.css';
 function App() {
   const routes = getRoutes();
   const router = createBrowserRouter(routes);
-  console.log('router', router);
 
   return (
     <RouterProvider router={router} />

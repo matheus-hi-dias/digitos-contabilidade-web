@@ -10,11 +10,16 @@ import DocumentStorageLocalScreen from '../screens/documentStorageLocalScreen';
 import UsersScreen from '../screens/usersScreen';
 import RolesScreen from '../screens/rolesScreen';
 import UnauthorizedScreen from '../screens/unauthorizedScreen';
+import LoadingScreen from '../screens/LoadingScreen';
 
 import useUser from '../hooks/useUser';
 
 function PrivateRoute({ children, requiredPermissions }) {
-  const { data } = useUser();
+  const { data, loading } = useUser();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!data) {
     return <Navigate to="/" />;
@@ -124,11 +129,22 @@ function NonAuthenticatedRoutes() {
 }
 
 export default function getRoutes() {
-  const { data } = useUser();
+  const { isLoggedIn, loading } = useUser();
+
+  if (loading) {
+    return [
+      {
+        path: '*',
+        element: (
+          <LoadingScreen />
+        ),
+      },
+    ];
+  }
   return [
     {
       path: '/',
-      element: data ? (
+      element: isLoggedIn ? (
         <Navigate to="/minha-area" />
       ) : (
         <NonAuthenticatedRoutes />
@@ -136,7 +152,7 @@ export default function getRoutes() {
     },
     {
       path: '/*',
-      element: data ? (
+      element: isLoggedIn ? (
         <AuthenticatedRoutes />
       ) : (
         <Navigate to="/" />

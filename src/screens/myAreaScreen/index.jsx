@@ -46,7 +46,7 @@ function MyAreaScreen() {
           <List containerClassName="myPermissionsListContainer">
             {rolePermissions.length > 0 && rolePermissions.map((permission) => (
               <ListItem
-                key={permission.id}
+                key={permission}
                 description={`${role.role} - ${permissions[permission]}`}
                 seeButton={false}
                 updateButton={false}
@@ -55,7 +55,7 @@ function MyAreaScreen() {
             ))}
             {myPermissions.length > 0 && myPermissions.map((permission) => (
               <ListItem
-                key={permission.id}
+                key={permission}
                 description={`${name} - ${permissions[permission]}`}
               />
             ))}
