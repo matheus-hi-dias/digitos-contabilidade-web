@@ -19,7 +19,3 @@ export function setEmptyValues(data) {
   const dataResponse = [objectWithEmptyValue, ...data];
   return dataResponse;
 }
-
-export function test() {
-  console.log('test')
-}
