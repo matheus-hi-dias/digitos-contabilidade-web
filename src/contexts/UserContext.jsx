@@ -15,6 +15,12 @@ export function UserContextProvider({ children }) {
   const [error, setError] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const logout = () => {
+    setData(null);
+    localStorage.removeItem('session');
+    setIsLoggedIn(false);
+  };
+
   const fetchUserData = async () => {
     try {
       if (!loading) {
@@ -24,7 +30,12 @@ export function UserContextProvider({ children }) {
         setError(false);
       }
       const userResponse = await getEmployeeProfile();
-      const myPermissionsResponse = await getPermissionsByEmployeeId(userResponse.id);
+      if (userResponse.name === 'TokenExpiredError') {
+        throw new Error('TokenExpiredError');
+      }
+      const myPermissionsResponse = userResponse.id
+        ? await getPermissionsByEmployeeId(userResponse.id)
+        : [];
       const rolePermissionsResponse = userResponse.role?.id
         ? await getPermissionByRoleId(userResponse.role.id)
         : [];
@@ -36,8 +47,14 @@ export function UserContextProvider({ children }) {
       });
     } catch (err) {
       console.error('error', err);
-      setData(err);
-      setError(true);
+      // Verifica se o erro é devido ao token expirado
+      if (err.message === 'TokenExpiredError') {
+        console.log('Token expired, logging out...');
+        logout();
+      } else {
+        setData(err);
+        setError(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -57,14 +74,10 @@ export function UserContextProvider({ children }) {
     fetchUserData();
   };
 
-  const logout = () => {
-    setData(null);
-    localStorage.removeItem('session');
-  };
-
   const value = useMemo(() => ({
     loading, error, data, isLoggedIn, login, logout, fetchUserData,
-  }), [data, loading, error]);
+  }), [data, loading, error, isLoggedIn]);
+
   return (
     <UserContext.Provider value={value}>
       {children}
