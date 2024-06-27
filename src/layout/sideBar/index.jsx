@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import './styles.scss';
 import useUser from '../../hooks/useUser';
+import { Button, LogOut } from '../../components';
 
 export default function SideBar() {
-  const { data } = useUser();
+  const { data, logout } = useUser();
   const activeRouteStyle = 'linkTextStyle activeRoute';
   const inactiveRouteStyle = 'linkTextStyle';
 
@@ -43,14 +44,18 @@ export default function SideBar() {
 
   return (
     <div className="sideBarContainer">
-      {renderNavLink('/minha-area', 'Minha Área')}
-      {renderNavLink('/documentos', 'Documentos')}
-      {renderNavLink('/clientes', 'Clientes')}
-      {renderNavLink('/tipo-de-documento', 'Tipo de Documento')}
-      {renderNavLink('/natureza', 'Natureza')}
-      {renderNavLink('/local-do-documento', 'Local do Documento')}
-      {renderNavLink('/usuarios', 'Usuários')}
-      {renderNavLink('/cargos', 'Cargos')}
+      <nav className="sideBarNav">
+        {renderNavLink('/minha-area', 'Minha Área')}
+        {renderNavLink('/documentos', 'Documentos')}
+        {renderNavLink('/clientes', 'Clientes')}
+        {renderNavLink('/tipo-de-documento', 'Tipo de Documento')}
+        {renderNavLink('/natureza', 'Natureza')}
+        {renderNavLink('/local-do-documento', 'Local do Documento')}
+        {renderNavLink('/usuarios', 'Usuários')}
+        {renderNavLink('/cargos', 'Cargos')}
+      </nav>
+
+      <Button icon={<LogOut size={24} />} text="Sair" variant="secondaryButton" type="button" onClick={logout} buttonCustomClass="logOutButton" />
 
     </div>
   );

@@ -4,11 +4,27 @@
   height: 100vh;
   width: 296px;
   background-color: variables.$SECONDARY_COLOR;
-  padding-top: 2%;
+  padding: 4% 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   font-size: variables.$FONT-BASE;
+
+  .sideBarNav {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logOutButton {
+    color: variables.$N000;
+    background-color: transparent;
+    font-size: variables.$FONT-BASE;
+    line-height: variables.$FONT-BASE;
+  }
 }
 
 .linkTextStyle {

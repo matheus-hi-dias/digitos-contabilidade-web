@@ -4,3 +4,4 @@ export {
   MdDelete, MdAddCircleOutline as AddIcon, MdClose as Close, MdCheck as Success,
 } from 'react-icons/md';
 export { BiSearch } from 'react-icons/bi';
+export { RiLogoutBoxLine as LogOut } from 'react-icons/ri';
