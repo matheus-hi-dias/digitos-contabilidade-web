@@ -121,3 +121,10 @@ Para visualizar prints das telas, clique para abrir as sessões
    ```
    npm start
    ```
+
+## Preview do projeto
+
+
+
+https://github.com/im-mhid/digitos-contabilidade-web/assets/79279387/88847a31-2609-4e66-a128-dd37ebb78715
+
