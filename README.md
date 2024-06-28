@@ -10,7 +10,7 @@
 
 ## Sobre o projeto
 
-Esse projeto consiste no desenvolvimento de um frontend em React para gerenciar documentos em uma empresa de contabilidade. O objetivo principal é facilitar a vida do usuário, digitalizando seus documentos, enquanto oferece uma interface intuitiva e eficiente para seu uso no dia a dia.
+Esse projeto consiste no desenvolvimento de um frontend em React para gerenciar documentos em uma empresa de contabilidade. O objetivo principal é facilitar a vida do usuário, digitalizando seus documentos, enquanto oferece uma interface intuitiva e eficiente para seu uso no dia a dia.<br>
 Ele ainda está em desenvolvimento e o objetivo é que, em breve, o usuário consiga armazenar os documentos no banco de dados da aplicação.
 
 ## Tecnologias utilizadas
