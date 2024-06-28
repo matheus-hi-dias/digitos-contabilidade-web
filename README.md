@@ -38,6 +38,7 @@ Ele ainda está em desenvolvimento e o objetivo é que, em breve, o usuário con
 <br>
 Para visualizar prints das telas, clique para abrir as sessões
 <br>
+<br>
 <details>
 <summary>1. Autenticação e autorização: registro e autenticação de usuários através de tokens JWT.</summary>
   Tela de login:
