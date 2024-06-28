@@ -24,7 +24,7 @@ Ele ainda está em desenvolvimento e o objetivo é que, em breve, o usuário con
 <details>
 <summary>Mais informações das tecnologias</summary>
 
-- [TypeScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript): uma linguagem de programação para, entre outros, criar aplicações dinâmicas na web.
+- [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript): uma linguagem de programação para, entre outros, criar aplicações dinâmicas na web.
 - [React](https://pt-br.react.dev/): React é uma biblioteca JavaScript de código aberto desenvolvida pelo Facebook que permite criar interfaces de usuário interativas e responsivas para aplicativos da web.
 - [Sass](https://sass-lang.com/documentation/): Sass é uma linguagem de extensão CSS que permite escrever estilos de forma mais eficiente e organizada, com recursos como variáveis, aninhamento e mixins, tornando o desenvolvimento de folhas de estilo mais poderoso e flexível.
 - [Axios](https://axios-http.com/ptbr/docs/intro): Axios é uma biblioteca JavaScript baseada em promessas, que permite fazer requisições HTTP de forma fácil e eficiente em aplicações front-end e back-end.
